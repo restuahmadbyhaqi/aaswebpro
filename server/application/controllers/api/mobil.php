@@ -22,11 +22,18 @@ class Mobil extends REST_Controller
     }
 
     function validate(){
+        $input_data = file_get_contents("php://input");
+        parse_str($input_data, $put_data);
+
+        $this->form_validation->set_data($put_data);
+        
         $this->form_validation->set_rules('merk_mobil', 'Merk Mobil', 'required|trim');
-        $this->form_validation->set_rules('cc_mobil', 'CC Mobil','required|numeric');
-        $this->form_validation->set_rules('jml_seat_mobil', 'Jumlah Seat Mobil', 'required|numeric');
-        $this->form_validation->set_rules('harga_sewa_mobil', 'Harga Sewa Mobil', 'required|numeric');
+        $this->form_validation->set_rules('cc_mobil', 'CC Mobil','required|trim|numeric');
+        $this->form_validation->set_rules('jml_seat_mobil', 'Jumlah Seat Mobil', 'required|trim|numeric');
+        $this->form_validation->set_rules('harga_sewa_mobil', 'Harga Sewa Mobil', 'required|trim|numeric');
     }
+
+
 
     public function options_get() {
         header("Access-Control-Allow-Origin: *");
@@ -117,18 +124,12 @@ class Mobil extends REST_Controller
             return $this->response($response);
         }
 
-        $merk_mobil = $this->put('merk_mobil');
-        $cc_mobil = $this->put('cc_mobil');
-        $jml_seat_mobil = $this->put('jml_seat_mobil');
-        $harga_sewa_mobil = $this->put('harga_sewa_mobil');
-        $status_mobil = $this->put('status_mobil');
-
         $data = array(
-            'merk_mobil' => $merk_mobil,
-            'cc_mobil' => $cc_mobil,
-            'jml_seat_mobil' => $jml_seat_mobil,
-            'harga_sewa_mobil' => $harga_sewa_mobil,
-            'status_mobil' => $status_mobil
+            'merk_mobil' => $this->put('merk_mobil'),
+            'cc_mobil' => $this->put('cc_mobil'),
+            'jml_seat_mobil' => $this->put('jml_seat_mobil'),
+            'harga_sewa_mobil' => $this->put('harga_sewa_mobil'),
+            'status_mobil' => $this->put('status_mobil')
         );
 
         $this->M_Mobil->update($id, $data);
