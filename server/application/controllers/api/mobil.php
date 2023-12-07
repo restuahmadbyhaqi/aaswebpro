@@ -96,9 +96,8 @@ class Mobil extends REST_Controller
 
             return $this->response($response);
     }
+    
 
-
-    // ERROR UPDATE DATA FORM VALIDATION
     public function index_put(){
         $id = $this->put('id');
         $check = $this->M_Mobil->check_data($id);
@@ -111,7 +110,7 @@ class Mobil extends REST_Controller
                 'status_code' => 502
             );
 
-            return $this->response($error, 502);
+            return $this->response($error);
         }
 
         $this->validate();

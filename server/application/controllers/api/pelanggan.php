@@ -5,7 +5,7 @@ require APPPATH . '/libraries/REST_Controller.php';
 
 use Restserver\Libraries\REST_Controller;
 
-class Mobil extends REST_Controller
+class Pelanggan extends REST_Controller
 {
     function __construct(){
         parent::__construct();
