@@ -49,13 +49,11 @@ class Register extends REST_Controller
         $username = $this->input->post('username');
         $email = $this->input->post('email');
         $password = md5($this->input->post('password'));
-        $role_id = '2'; //customer
 
         $data = array(
             'username' => $username,
             'email' => $email,
             'password' => $password,
-            'role_id' => $role_id
         );
         $this->M_User->insert($data);
             $response = array(

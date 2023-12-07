@@ -27,10 +27,10 @@ class Mobil extends REST_Controller
 
         $this->form_validation->set_data($put_data);
         
-        $this->form_validation->set_rules('merk_mobil', 'Merk Mobil', 'required|trim');
-        $this->form_validation->set_rules('cc_mobil', 'CC Mobil','required|trim|numeric');
-        $this->form_validation->set_rules('jml_seat_mobil', 'Jumlah Seat Mobil', 'required|trim|numeric');
-        $this->form_validation->set_rules('harga_sewa_mobil', 'Harga Sewa Mobil', 'required|trim|numeric');
+        $this->form_validation->set_rules('nama_mobil', 'Nama Mobil', 'required|trim');
+        $this->form_validation->set_rules('warna', 'Warna Mobil','required|trim');
+        $this->form_validation->set_rules('no_polisi', 'Nomor Polisi', 'required|trim');
+        $this->form_validation->set_rules('jumlah_kursi', 'Jumlah Kursi', 'required|trim|numeric');
     }
 
 
@@ -55,7 +55,7 @@ class Mobil extends REST_Controller
         //     );
         // }
 
-        $id = $this->get('id_mobil');
+        $id = $this->get('id');
         if($id == '') {
             $data = $this->M_Mobil->get_all();
         } else {
@@ -74,18 +74,18 @@ class Mobil extends REST_Controller
             );
             return $this->response($response);
         }
-        $merk_mobil = $this->input->post('merk_mobil');
-        $cc_mobil = $this->input->post('cc_mobil');
-        $jml_seat_mobil = $this->input->post('jml_seat_mobil');
-        $harga_sewa_mobil = $this->input->post('harga_sewa_mobil');
-        $status_mobil = '1'; //tersedia
+        $nama_mobil = $this->input->post('nama_mobil');
+        $warna = $this->input->post('warna');
+        $no_polisi = $this->input->post('no_polisi');
+        $jumlah_kursi = $this->input->post('jumlah_kursi');
+        $status = '1'; //tersedia
 
         $data = array(
-            'merk_mobil' => $merk_mobil,
-            'cc_mobil' => $cc_mobil,
-            'jml_seat_mobil' => $jml_seat_mobil,
-            'harga_sewa_mobil' => $harga_sewa_mobil,
-            'status_mobil' => $status_mobil
+            'nama_mobil' => $nama_mobil,
+            'warna' => $warna,
+            'no_polisi' => $no_polisi,
+            'jumlah_kursi' => $jumlah_kursi,
+            'status' => $status
         );
         $this->M_Mobil->insert($data);
         $response = array(
@@ -100,7 +100,7 @@ class Mobil extends REST_Controller
 
     // ERROR UPDATE DATA FORM VALIDATION
     public function index_put(){
-        $id = $this->put('id_mobil');
+        $id = $this->put('id');
         $check = $this->M_Mobil->check_data($id);
 
         if (!$check) {
@@ -125,11 +125,11 @@ class Mobil extends REST_Controller
         }
 
         $data = array(
-            'merk_mobil' => $this->put('merk_mobil'),
-            'cc_mobil' => $this->put('cc_mobil'),
-            'jml_seat_mobil' => $this->put('jml_seat_mobil'),
-            'harga_sewa_mobil' => $this->put('harga_sewa_mobil'),
-            'status_mobil' => $this->put('status_mobil')
+            'nama_mobil' => $this->put('nama_mobil'),
+            'warna' => $this->put('warna'),
+            'no_polisi' => $this->put('no_polisi'),
+            'jumlah_kursi' => $this->put('jumlah_kursi'),
+            'status' => $this->put('status')
         );
 
         $this->M_Mobil->update($id, $data);
@@ -144,7 +144,7 @@ class Mobil extends REST_Controller
     }
     
     function index_delete() {
-        $id = $this->delete('id_mobil');
+        $id = $this->delete('id');
         $check = $this->M_Mobil->check_data($id);
         if($check == false) {
             $error = array(
