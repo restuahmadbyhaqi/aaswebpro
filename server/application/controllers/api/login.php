@@ -5,7 +5,6 @@ require APPPATH . '/libraries/REST_Controller.php';
 require_once FCPATH . 'vendor/autoload.php';
 
 use Restserver\Libraries\REST_Controller;
-
 class Login extends REST_Controller
 {
     function __construct()
@@ -73,5 +72,7 @@ class Login extends REST_Controller
 
         return $this->response($response);
     }
+
 }
+
 ?>

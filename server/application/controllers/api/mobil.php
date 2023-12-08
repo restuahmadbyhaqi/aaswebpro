@@ -2,9 +2,9 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 require APPPATH . '/libraries/REST_Controller.php';
+require_once FCPATH . 'vendor/autoload.php';
 
 use Restserver\Libraries\REST_Controller;
-
 class Mobil extends REST_Controller
 {
     function __construct(){
@@ -19,6 +19,7 @@ class Mobil extends REST_Controller
         $this->load->database();
         $this->load->model('M_Mobil');
         $this->load->library('form_validation');
+        $this->load->library('jwt');
     }
 
     function validate(){
@@ -33,8 +34,6 @@ class Mobil extends REST_Controller
         $this->form_validation->set_rules('jumlah_kursi', 'Jumlah Kursi', 'required|trim|numeric');
     }
 
-
-
     public function options_get() {
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
@@ -42,18 +41,27 @@ class Mobil extends REST_Controller
         exit();
     }
 
-    function index_get() {
-        // $authorizationHeader = $this->input->get_request_header('Authorization', true);
+    function is_login() {
+        $authorizationHeader = $this->input->get_request_header('Authorization', true);
 
-        // if(empty($authorizationHeader) || $this->jwt->decode($authorizationHeader) === false) {
-        //     return $this->response(
-        //         array(
-        //             'kode' => '401',
-        //             'pesan' => 'signature tidak sesuai',
-        //             'data' => []
-        //         ), '401'
-        //     );
-        // }
+        if (empty($authorizationHeader) || $this->jwt->decode($authorizationHeader) === false) {
+            $this->response(
+                array(
+                    'kode' => '401',
+                    'pesan' => 'signature tidak sesuai',
+                    'data' => []
+                ), '401'
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+    function index_get() {
+        if (!$this->is_login()) {
+            return;
+        }
 
         $id = $this->get('id');
         if($id == '') {
@@ -65,6 +73,10 @@ class Mobil extends REST_Controller
     }
     
     function index_post(){
+        if (!$this->is_login()) {
+            return;
+        }
+
         $this->validate();
         if ($this->form_validation->run() === FALSE) {
             $error = $this->form_validation->error_array();
@@ -96,9 +108,12 @@ class Mobil extends REST_Controller
 
             return $this->response($response);
     }
-    
 
     public function index_put(){
+        if (!$this->is_login()) {
+            return;
+        }
+
         $id = $this->put('id');
         $check = $this->M_Mobil->check_data($id);
 
@@ -143,6 +158,10 @@ class Mobil extends REST_Controller
     }
     
     function index_delete() {
+        if (!$this->is_login()) {
+            return;
+        }
+
         $id = $this->delete('id');
         $check = $this->M_Mobil->check_data($id);
         if($check == false) {
@@ -163,7 +182,6 @@ class Mobil extends REST_Controller
         );
         return $this->response($response);
     }
-
 
 }
 
