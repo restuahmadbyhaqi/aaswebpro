@@ -1,91 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="Img/libralyra.svg">
-    <title>LibraLyra</title>
-    <style>
-        body {
-            font-family: "poppins";
-            margin: 0px;
-            padding: 0px;
-            background-color: #5b95f7;
-        }   
-        main {
-            width: 100%;
-            overflow-y: hidden;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .container {
-            border: 2px solid black;
-            padding-left: 0px;
-            width: 490px;
-            height: 650px;
-            border-radius: 15px;
-            padding-top: 48px;
-            background-color: #ef823f;
-            background-attachment: fixed;
-            background-size: cover;
-            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
-            background-position: center;
-        }
-        input {
-            border: 2px solid black;
-        }
-        input:focus {
-            outline: none; 
-            text-indent: 10px;  
-        }
-        input[type="text"], input[type="email"], input[type="password"] {
-            text-indent: 10px; 
-            font-family: "poppins";
-            font-size: 15px;
-            font-weight: 500;
-        }
-        button {
-            cursor: pointer;
-            border: 2px solid black;
-        }
-        p {
-            width: fit-content; 
-            margin: auto;
-            padding-top: 30px;
-        }
-    </style>
+    <!-- Your existing head content goes here -->
+
+    <title>Register</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
 </head>
-<body>
-    <main>
-        <div class="container">
-            <div class="Logo" style="display: flex;justify-content: center;">
-                <img src="img/libralyra.svg" alt="" style="width: fit-content; height: 100px; display: block;">
+
+<body class="bg-gradient-primary">
+
+    <div class="container">
+
+        <!-- Outer Row -->
+        <div class="row justify-content-center">
+
+            <div class="col-xl-6 col-lg-8 col-md-8">
+
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-4">Register</h1>
+                                    </div>
+                                    <form class="user">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control form-control-user" id="username"
+                                                aria-describedby="emailHelp" placeholder="Username...">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="email" class="form-control form-control-user" id="email"
+                                                aria-describedby="emailHelp" placeholder="Email Address...">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" class="form-control form-control-user" id="password"
+                                                placeholder="Password">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-user btn-block">
+                                            Login
+                                        </button>
+                                    </form>
+                                    <div class="text-center mt-3">
+                                        <a class="small" href="login.html">Already have an account? Login!</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-            <div style="padding-left: 17px;">
-                <h1 style="font-weight: 600;width: fit-content;margin-bottom: 0px; margin-left: 6%;padding: 0px;margin-top: 10px; font-size: 30px;">Register</h1>
-                <h2 style="font-weight: unset;width: fit-content;margin-bottom: 0px; margin-left: 6%;margin-top: 0px;font-size: 20px;padding: 0px;">to create an account</h2>
-                <form action="">
-                    <div>
-                        <input type="text" name="username" id="username" style="margin-left: 6%;margin-top: 10px;width: 394px;margin-top: 10px;height: 40px;border-radius: 10px;" placeholder="Username">
-                    </div>
-                    <div style="margin-top: 10px;">
-                        <input type="email" name="email" id="email" style="margin-left: 6%;margin-top: 10px;width: 394px;margin-top: 10px;height: 40px;border-radius: 10px;" placeholder="Email">
-                    </div>
-                    <div style="margin-top: 10px;">
-                        <input type="password" name="password" id="password" style="margin-left: 6%;width: fit-content;margin-top: 10px;width: 394px;height: 40px;border-radius: 10px;" placeholder="Password">
-                    </div>
-                    <div style="margin-top: 10px;">
-                        <input type="password" name="confirmPassword" id="confirmPassword" style="margin-left: 6%;width: fit-content;margin-top: 10px;width: 394px;height: 40px;border-radius: 10px;" placeholder="Confirm Password">
-                    </div>
-                    <div style="margin-top: 10px;margin-bottom: 20px;">
-                        <button type="submit" style="font-size: 15px; font-weight: bold; margin-left: 6%; width: fit-content; margin-top: 10px; width: 400px; height: 40px; border-radius: 10px; background-color: #ffffff; color: #000000;">REGISTER</button>
-                    </div>
-                </form>
-            </div>
-            <p style="width: fit-content; margin: auto;padding-top: 20px;">Already have an account? <a href="login.html" style="color: black; text-decoration: none;font-weight: 600;">Login</a></p>
+
         </div>
-    </main>
+
+    </div>
+
+        <!-- Bootstrap core JavaScript-->
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    
+        <!-- Core plugin JavaScript-->
+        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    
+        <!-- Custom scripts for all pages-->
+        <script src="js/sb-admin-2.min.js"></script>
+
 </body>
+
 </html>
