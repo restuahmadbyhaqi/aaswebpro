@@ -43,7 +43,7 @@
                                             <input type="password" class="form-control form-control-user" id="password"
                                                 placeholder="Password">
                                         </div>
-                                        <button type="submit" class="btn btn-primary btn-user btn-block">
+                                        <button type="submit" class="btn btn-primary btn-user btn-block" id="btnLogin">
                                             Login
                                         </button>
                                     </form>
@@ -71,6 +71,40 @@
     
         <!-- Custom scripts for all pages-->
         <script src="js/sb-admin-2.min.js"></script>
+
+        <script>
+            var base_url = "http://127.0.0.1/uasWebpro/server/index.php/api/";
+        
+            $(document).ready(function () {
+                $(document).on("click", '#btnLogin', function (event) {
+                    event.preventDefault(); 
+        
+                    $.ajax({
+                        type: 'POST',
+                        url: base_url + "login",
+                        data: {
+                            email: $("#email").val(),
+                            password: $("#password").val(),
+                        },
+                        dataType: "json",
+                        cache: false,
+                        success: function (data) {
+                            console.log(data); 
+        
+                            if (data.status_code == 502) {
+                                alert(data.message);
+                            } else {
+                                console.log("Redirecting to login.html");
+                                window.location.href = 'file:///C:/xampp2/htdocs/uasWebpro/client/kontak_index.html';
+                            }
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            console.error("AJAX Error:", textStatus, errorThrown);
+                        }
+                    });
+                });
+            });
+        </script>
 
 </body>
 
