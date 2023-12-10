@@ -91,11 +91,11 @@
                         success: function (data) {
                             console.log(data); 
         
-                            if (data.status_code == 502) {
-                                alert(data.message);
-                            } else {
+                            if (data.status_code == 200) {
                                 console.log("Redirecting to login.html");
                                 window.location.href = 'file:///C:/xampp2/htdocs/uasWebpro/client/kontak_index.html';
+                            } else {
+                                alert(data.message);
                             }
                         },
                         error: function (xhr, textStatus, errorThrown) {

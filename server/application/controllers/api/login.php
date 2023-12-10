@@ -47,12 +47,12 @@ class Login extends REST_Controller
             );
             return $this->response($response, 502);
         }
-
+    
         $email = $this->input->post('email');
         $password = md5($this->input->post('password'));
-
+    
         $user = $this->M_User->cek_login($email, $password);
-
+    
         if (!$user) {
             $response = array(
                 'status_code' => 401,
@@ -60,18 +60,24 @@ class Login extends REST_Controller
             );
             return $this->response($response, 401);
         }
-
+    
         $token = $this->jwt->encode($email, $password);
 
+        // $expiryDate = time() + 3600;
+
+        // setcookie('access_token', $token, $expiryDate, 'http://127.0.0.1', '', false, true);
+    
         $response = array(
             'status_code' => 200,
             'message' => 'Login successful',
             'user_data' => $user,
             'token' => $token
         );
-
+    
         return $this->response($response);
     }
+    
+    
 
 }
 
