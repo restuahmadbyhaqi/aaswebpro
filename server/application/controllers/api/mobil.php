@@ -89,7 +89,7 @@ class Mobil extends REST_Controller
         $warna = $this->input->post('warna');
         $no_polisi = $this->input->post('no_polisi');
         $jumlah_kursi = $this->input->post('jumlah_kursi');
-        $status = '1'; //tersedia
+        $status = 1; //tersedia
 
         $data = array(
             'nama_mobil' => $nama_mobil,

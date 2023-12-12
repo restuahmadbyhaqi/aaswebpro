@@ -224,15 +224,15 @@
 
     <script>
         var base_url = "http://localhost/uasWebpro/server/api/";
-
+    
         $(document).ready(function(){
             let token = localStorage.getItem('token');
-
+    
             if (!token) {
                 alert("Harus login dahulu");
                 window.location.href = './../auth/login.html';
             }
-
+    
             $.ajax({
                 type: "GET",
                 url: base_url + "mobil",
@@ -247,14 +247,21 @@
                 success: function(responseData) {
                     let dataBody = ``;
                     for (let i = 0; i < responseData.length; i++) {
-                        dataBody+=`
+                        let statusMobil = '';
+                        if (responseData[i].status === '1') {
+                            statusMobil = 'Tersedia';
+                        } else  {
+                            statusMobil = 'Dipinjam';
+                        }
+    
+                        dataBody += `
                             <tr>
                                 <td>${i+1}</td>
                                 <td>${responseData[i].nama_mobil}</td>
                                 <td>${responseData[i].warna}</td>
                                 <td>${responseData[i].no_polisi}</td>
                                 <td>${responseData[i].jumlah_kursi}</td>
-                                <td>${responseData[i].status}</td>
+                                <td>${statusMobil}</td>
                                 <td>
                                     <a href="#" data-id="${responseData[i].id}" class="btn btn-sm btn-info btnView"><i class="fa fa-eye"></i></a>&nbsp
                                     <a href="#" data-id="${responseData[i].id}" class="btn btn-sm btn-warning btnEdit"><i class="fa fa-pen"></i></a>&nbsp
@@ -268,6 +275,7 @@
             })
         });
     </script>
+    
     
 </body>
 
