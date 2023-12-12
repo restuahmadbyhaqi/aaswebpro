@@ -54,7 +54,7 @@
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="mobil_index.html">
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fas fa-fw fa-car"></i>
                     <span>Data Mobil</span>
                 </a>
             </li>            
@@ -129,23 +129,27 @@
                         <!-- Earnings (Monthly) Card Example -->
                         <div class="col-md-12" style="text-align: justify;">
                             <div class="form-group">
-                                <label for="name">Name</label>
-                                <input type="text" name="name" id="name" class="form-control" placeholder="Masukkan nama anda" required>
+                                <label for="name">Nama Mobil</label>
+                                <input type="text" name="nama_mobil" id="nama_mobil" class="form-control" placeholder="Masukkan nama mobil" required>
                             </div>
                             <div class="form-group">
-                                <label for="number">Phone Number</label>
-                                <input type="text" name="number" id="number" class="form-control" placeholder="Masukkan nomor HP anda" required>
+                                <label for="number">Warna Mobil</label>
+                                <input type="text" name="warna" id="warna" class="form-control" placeholder="Masukkan warna mobil" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="number">Nomor Polisi</label>
+                                <input type="text" name="no_polisi" id="no_polisi" class="form-control" placeholder="Masukkan nomor polisi mobil" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="number">Jumlah Kursi</label>
+                                <input type="number" name="jumlah_kursi" id="jumlah_kursi" class="form-control" placeholder="Masukkan jumlah kursi mobil" required>
                             </div>
                             <div class="form-group">
                                 <a href="mobil_index.html" class="btn btn-sm btn-warning">Kembali</a>
                                 <button type="button" class="btn btn-sm btn-success" id="btnSave"><i class="fa fa-save"></i>Simpan</button>
                             </div>
                         </div>                        
-                    </div>
-
-                    <!-- Content Row -->                    
-
-                    <!-- Content Row -->                    
+                    </div>                 
 
                 </div>
                 <!-- /.container-fluid -->
@@ -211,15 +215,27 @@
     <script src="../../js/demo/chart-pie-demo.js"></script>
 
     <script>
-        var base_url = "http://localhost/cirest/api/";
+        var base_url = "http://localhost/uasWebpro/server/api/";
         $(document).ready(function(){
+            let token = localStorage.getItem('token');
+
+            if (!token) {
+                alert("Harus login dahulu");
+                window.location.href = './../auth/login.html';
+            }
+
             $(document).on("click", '#btnSave', function() {
                 $.ajax({
                     type: 'POST',
-                    url: base_url + "kontak",
+                    url: base_url + "mobil",
+                    headers: {
+                        "Authorization" : "Bearer " + token 
+                    },
                     data: {
-                        name: $("#name").val(),
-                        number: $("#number").val(),
+                        nama_mobil: $("#nama_mobil").val(),
+                        warna: $("#warna").val(),
+                        no_polisi: $("#no_polisi").val(),
+                        jumlah_kursi: $("#jumlah_kursi").val(),
                     },
                     dataType: "json",
                     cache: false,
@@ -228,7 +244,7 @@
                             if (data.status_code == 502){
                                 alert(data.message);
                             } else {
-                                window.location.href = 'file:///D:/Kuliah/Semester%203/Webpro%202/p-13/template-webpro2-master/kontak_index.html';
+                                window.location.href = 'mobil_index.html';
                             }
                         }
                 })

@@ -58,9 +58,9 @@ class Mobil extends REST_Controller
     }
 
     function index_get() {
-        // if (!$this->is_login()) {
-        //     return;
-        // }
+        if (!$this->is_login()) {
+            return;
+        }
 
         $id = $this->get('id');
         if($id == '') {
