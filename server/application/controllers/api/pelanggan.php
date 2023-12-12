@@ -8,14 +8,13 @@ use Restserver\Libraries\REST_Controller;
 
 class Pelanggan extends REST_Controller
 {
-    function __construct(){
-        parent::__construct();
-        header('Access-Control-Allow-Origin:*');
-        header("Access-Control-Allow-Headers:X-API-KEY,Origin,X-Requested-With,Content-Type,Accept,Access-Control-Request-Method,Authorization");
-        header("Access-Control-Allow-Methods:GET,POST,OPTIONS,PUT,DELETE");
-        $method = $_SERVER['REQUEST_METHOD'];
-        if ($method == "OPTIONS") {
-            die();
+    function __construct($config = 'rest') {
+        parent::__construct($config);
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            header("Access-Control-Allow-Origin: *");
+            header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+            header("Access-Control-Allow-Headers: Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method, ");
+            exit;
         }
         $this->load->database();
         $this->load->model('M_Pelanggan');
