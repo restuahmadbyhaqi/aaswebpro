@@ -60,7 +60,7 @@
             </li>            
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#">
-                    <i class="fas fa-fw fa-car"></i>
+                    <i class="fas fa-fw fa-users"></i>
                     <span>Data Pelanggan</span>
                 </a>
             </li>            
@@ -145,6 +145,7 @@
                                     <tr>
                                         <th style="width: 10%;">NO</th>
                                         <th>NAMA</th>
+                                        <th>ALAMAT</th>
                                         <th>NOMOR HANDPHONE</th>
                                         <th>AKSI</th>
                                     </tr>
@@ -220,28 +221,40 @@
     <script src="../../js/demo/chart-pie-demo.js"></script>
 
     <script>
-        var base_url = "http://localhost/cirest/api/";
+        var base_url = "http://localhost/uasWebpro/server/api/";
+
         $(document).ready(function(){
+            let token = localStorage.getItem('token');
+
+            if (!token) {
+                alert("Harus login dahulu");
+                window.location.href = './../auth/login.html';
+            }
+
             $.ajax({
                 type: "GET",
-                url: base_url + "kontak",
+                url: base_url + "pelanggan",
+                headers: {
+                    "Authorization" : "Bearer " + token 
+                },
                 data: {
                     id: ''
                 },
                 dataType: "json",
-                chache: false,
+                cache: false,
                 success: function(responseData) {
                     let dataBody = ``;
                     for (let i = 0; i < responseData.length; i++) {
                         dataBody+=`
                             <tr>
                                 <td>${i+1}</td>
-                                <td>${responseData[i].name}</td>
-                                <td>${responseData[i].number}</td>
+                                <td>${responseData[i].nama}</td>
+                                <td>${responseData[i].alamat}</td>
+                                <td>${responseData[i].no_hp}</td>
                                 <td>
-                                    <a href="#" data-id="${responseData[i].id}" class="btn btn-sm btn-info btnView"><i class="fa fa-eye"></i></a>&nbsp;
-                                    <a href="#" data-id="${responseData[i].id}" class="btn btn-sm btn-warning btnEdit"><i class="fa fa-pen"></i></a>&nbsp;
-                                    <a href="#" data-id="${responseData[i].id}" class="btn btn-sm btn-danger btnDelete"><i class="fa fa-trash"></i></a>;
+                                    <a href="#" data-id="${responseData[i].id}" class="btn btn-sm btn-info btnView"><i class="fa fa-eye"></i></a>&nbsp
+                                    <a href="#" data-id="${responseData[i].id}" class="btn btn-sm btn-warning btnEdit"><i class="fa fa-pen"></i></a>&nbsp
+                                    <a href="#" data-id="${responseData[i].id}" class="btn btn-sm btn-danger btnDelete"><i class="fa fa-trash"></i></a>
                                 </td>
                             </tr>`;
                     }

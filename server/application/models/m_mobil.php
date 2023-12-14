@@ -24,6 +24,11 @@
             }
         }
 
+        function update($id, $data) {
+            $this->db->where('id', $id);
+            $this->db->update('mobil', $data);
+        }
+
         function insert($data) {
             $this->db->insert('mobil', $data);
             if($this->db->affected_rows()) {
@@ -31,11 +36,6 @@
             } else {
                 return false;
             }
-        }
-
-        function update($id, $data) {
-            $this->db->where('id', $id);
-            $this->db->update('mobil', $data);
         }
         
         function delete($id) {
