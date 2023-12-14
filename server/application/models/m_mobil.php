@@ -26,8 +26,11 @@
 
         function update($id, $data) {
             $this->db->where('id', $id);
-            $this->db->update('mobil', $data);
+            $result = $this->db->update('mobil', $data);
+        
+            return $result;
         }
+        
 
         function insert($data) {
             $this->db->insert('mobil', $data);
