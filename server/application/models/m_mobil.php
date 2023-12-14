@@ -2,7 +2,7 @@
     class M_Mobil extends CI_Model {
 
         function get_all() {
-            $this->db->order_by('id', 'DESC');
+            $this->db->order_by('id');
             $query = $this->db->get('mobil');
             return $query->result_array();
         }
