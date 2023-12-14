@@ -5,7 +5,7 @@ require APPPATH . '/libraries/REST_Controller.php';
 require_once FCPATH . 'vendor/autoload.php';
 
 use Restserver\Libraries\REST_Controller;
-class Detail_Rental extends REST_Controller
+class Transaksi extends REST_Controller
 {
     function __construct($config = 'rest'){
         parent::__construct($config);
@@ -27,9 +27,9 @@ class Detail_Rental extends REST_Controller
 
         $this->form_validation->set_data($put_data);
         
-        $this->form_validation->set_rules('nama', 'Nama Pelanggan', 'required|trim');
-        $this->form_validation->set_rules('alamat', 'Alamat Pelanggan','required|trim');
-        $this->form_validation->set_rules('no_hp', 'Nomor Hp Pelanggan', 'required|trim');
+        $this->form_validation->set_rules('harga', 'Harga Mobil', 'required|numeric');
+        $this->form_validation->set_rules('tgl_pinjam', 'Tanggal Pinjam','required');
+        $this->form_validation->set_rules('tgl_kembali', 'Tanggal Kembali', 'required');
     }
 
     public function options_get() {
@@ -69,6 +69,24 @@ class Detail_Rental extends REST_Controller
         }
         $this->response($data, 200);
     }
+
+    private function mobilExist($idMobil) {
+        $queryTransaksi = "SELECT * FROM detail_pesanan WHERE id_Mobil = $idMobil";
+        $queryMobil = "SELECT * FROM mobil WHERE id = $idMobil";
+    
+        $resultTransaksi = $this->db->query($queryTransaksi);
+        $resultMobil = $this->db->query($queryMobil);
+    
+        $mobilExists = $resultTransaksi->num_rows() > 0 || $resultMobil->num_rows() === 0;
+    
+        if (!$mobilExists) {
+            $updateStatusQuery = "UPDATE mobil SET status = 2 WHERE id = $idMobil";
+            $this->db->query($updateStatusQuery);
+        }
+    
+        return $mobilExists;
+    }
+    
     
     public function index_post() {
         if (!$this->is_login()) {
@@ -76,7 +94,7 @@ class Detail_Rental extends REST_Controller
         }
 
         $this->validate();
-    
+
         if ($this->form_validation->run() === FALSE) {
             $error = $this->form_validation->error_array();
             $response = array(
@@ -84,16 +102,27 @@ class Detail_Rental extends REST_Controller
                 'message' => $error
             );
             return $this->response($response);
-    
+        }
+
+        $idMobil = $this->post('id_mobil');
+
+        if ($this->mobilExist($idMobil)) {
+            $response = array(
+                'status_code' => 400,
+                'message' => 'Mobil sedang dipinjam atau tidak ditemukan.'
+            );
+            return $this->response($response);
+        }
+
         $data = [
-            'id_pelanggan' => $this->req->post('id_pelanggan'),
-            'id_mobil' => $this->req->post('id_mobil'),
-            'harga' => $this->req->post('harga'),
-            'tgl_pinjam' => $this->req->post('tgl_pinjam'),
-            'tgl_kembali' => $this->req->post('tgl_kembali'),
+            'id_pelanggan' => $this->post('id_pelanggan'),
+            'id_mobil' => $idMobil,
+            'harga' => $this->post('harga'),
+            'tgl_pinjam' => $this->post('tgl_pinjam'),
+            'tgl_kembali' => $this->post('tgl_kembali'),
         ];
-    
-        if ($this->pesanan->insert($data)) {
+
+        if ($this->M_Detail_Rental->insert($data)) {
             $response = array(
                 'status_code' => 201,
                 'message' => 'success',
@@ -110,7 +139,6 @@ class Detail_Rental extends REST_Controller
             return $this->response($error);
         }
     }
-}
     
     public function index_put(){
         if (!$this->is_login()) {
