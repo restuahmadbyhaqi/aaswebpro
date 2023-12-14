@@ -263,6 +263,38 @@
                 }
             })
         });
+
+        // delete pelanggan :v
+        $(document).on('click', '.btnDelete', function() {
+            var userConfirm = confirm("Apakah anda yakin akan menghapus data ini?");
+                if (userConfirm) {
+                    let token = localStorage.getItem('token');
+        
+                    if (!token) {
+                        alert("Harus login dahulu");
+                        window.location.href = './../auth/login.html';
+                    }
+
+                    pelangganId = $(this).data('id');
+                    $.ajax( {
+                        type: 'DELETE',
+                        url: base_url + "pelanggan",
+                        headers: {
+                            "Authorization" : "Bearer " + token 
+                        },
+                        data: {
+                            id: pelangganId
+                        },
+                        dataType: 'json',
+                        cache: false,
+                        success: 
+                            function(responseData){
+                                alert("Mobil deleted successfully")
+                                location.reload();
+                            }
+                    })
+            }
+        })
     </script>
     
 </body>
