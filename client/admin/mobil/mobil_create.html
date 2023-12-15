@@ -145,6 +145,10 @@
                                 <input type="number" name="jumlah_kursi" id="jumlah_kursi" class="form-control" placeholder="Masukkan jumlah kursi mobil" required>
                             </div>
                             <div class="form-group">
+                                <label for="number">Harga Sewa/Hari</label>
+                                <input type="text" name="harga_sewa" id="harga_sewa" class="form-control" placeholder="Masukkan Harga Sewa mobil perhari" required>
+                            </div>
+                            <div class="form-group">
                                 <a href="mobil_index.html" class="btn btn-sm btn-warning">Kembali</a>
                                 <button type="button" class="btn btn-sm btn-success" id="btnSave"><i class="fa fa-save"></i>Simpan</button>
                             </div>
@@ -194,10 +198,9 @@
     <!-- Page level custom scripts -->
     <script src="../../js/demo/chart-area-demo.js"></script>
     <script src="../../js/demo/chart-pie-demo.js"></script>
-    <script src="handleLogout.js"></script>
-
+    <script  src="../handleLogout.js"></script>
     <script>
-        var base_url = "http://localhost/uasWebpro/server/api/";
+        var base_url = "http://localhost/uasWebpro/server/api/admin/";
         $(document).ready(function(){
             let token = localStorage.getItem('token');
 
@@ -218,6 +221,7 @@
                         warna: $("#warna").val(),
                         no_polisi: $("#no_polisi").val(),
                         jumlah_kursi: $("#jumlah_kursi").val(),
+                        harga_sewa: $("#harga_sewa").val(),
                     },
                     dataType: "json",
                     cache: false,

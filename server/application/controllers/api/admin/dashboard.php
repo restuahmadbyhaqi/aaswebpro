@@ -52,13 +52,13 @@ class Dashboard extends REST_Controller
         }
 
         $user=$this->M_Dashboard->getCountUser();
-        $pelanggan=$this->M_Dashboard->getCountPelanggan();
         $mobil=$this->M_Dashboard->getCountMobil();
+        $transaksi=$this->M_Dashboard->getCountTransaksi();
 
         $data = array(
             'total user' => $user,
-            'total pelanggan' => $pelanggan,
-            'total mobil' => $mobil
+            'total mobil' => $mobil,
+            'total transaksi' => $transaksi,
         );
 
         $this->response($data, 200);

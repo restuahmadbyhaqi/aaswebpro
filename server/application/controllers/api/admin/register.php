@@ -18,7 +18,7 @@ class Register extends REST_Controller
             die();
         }
         $this->load->database();
-        $this->load->model('M_User');
+        $this->load->model('M_Auth');
         $this->load->library('form_validation');
     }
     function validate()
@@ -49,13 +49,15 @@ class Register extends REST_Controller
         $username = $this->input->post('username');
         $email = $this->input->post('email');
         $password = md5($this->input->post('password'));
+        $role_id = 2;
 
         $data = array(
             'username' => $username,
             'email' => $email,
             'password' => $password,
+            'role_id' => $role_id
         );
-        $this->M_User->insert($data);
+        $this->M_Auth->insert($data);
             $response = array(
                 'status_code' => 201,
                 'message' => 'success',

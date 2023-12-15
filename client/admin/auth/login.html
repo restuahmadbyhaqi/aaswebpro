@@ -73,8 +73,8 @@
         <script src="../../js/sb-admin-2.min.js"></script>
 
         <script>
-            var base_url = "http://localhost/uasWebpro/server/api/";
-
+            var base_url = "http://localhost/uasWebpro/server/api/admin/";
+        
             $(document).ready(function () {
         
                 $(document).on("click", '#btnLogin', function (event) {
@@ -92,6 +92,7 @@
                         success: function (response) {
                             if (response.status_code == 200) {
                                 localStorage.setItem('token', response.token);
+                                displayUserInfo(response.user_data.username); 
                                 window.location.href = './../dashboard.html';
                             } else {
                                 alert(response.message);
@@ -99,8 +100,13 @@
                         }
                     });
                 });
+        
+                function displayUserInfo(username) {
+                    alert("Hallo Admin , " + username + "!");
+                }
             });
         </script>
+        
 
 </body>
 

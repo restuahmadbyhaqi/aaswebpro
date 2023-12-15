@@ -5,19 +5,19 @@ require APPPATH . '/libraries/REST_Controller.php';
 require_once FCPATH . 'vendor/autoload.php';
 
 use Restserver\Libraries\REST_Controller;
-
-class Pelanggan extends REST_Controller
+class Mobil extends REST_Controller
 {
-    function __construct($config = 'rest') {
+    function __construct($config = 'rest'){
         parent::__construct($config);
-        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-            header("Access-Control-Allow-Origin: *");
-            header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
-            header("Access-Control-Allow-Headers: Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method, ");
-            exit;
+        header('Access-Control-Allow-Origin:*');
+        header("Access-Control-Allow-Headers:X-API-KEY,Origin,X-Requested-With,Content-Type,Accept,Access-Control-Request-Method,Authorization");
+        header("Access-Control-Allow-Methods:GET,POST,OPTIONS,PUT,DELETE");
+        $method = $_SERVER['REQUEST_METHOD'];
+        if ($method == "OPTIONS") {
+            die();
         }
         $this->load->database();
-        $this->load->model('M_Pelanggan');
+        $this->load->model('M_Mobil');
         $this->load->library('form_validation');
         $this->load->library('jwt');
     }
@@ -28,9 +28,11 @@ class Pelanggan extends REST_Controller
 
         $this->form_validation->set_data($put_data);
         
-        $this->form_validation->set_rules('nama', 'Nama Pelanggan', 'required|trim');
-        $this->form_validation->set_rules('alamat', 'Alamat Pelanggan','required|trim');
-        $this->form_validation->set_rules('no_hp', 'Nomor Hp Pelanggan', 'required|trim');
+        $this->form_validation->set_rules('nama_mobil', 'Nama Mobil', 'required|trim');
+        $this->form_validation->set_rules('warna', 'Warna Mobil','required|trim');
+        $this->form_validation->set_rules('no_polisi', 'Nomor Polisi', 'required|trim');
+        $this->form_validation->set_rules('jumlah_kursi', 'Jumlah Kursi', 'required|trim|numeric');
+        $this->form_validation->set_rules('harga_sewa', 'Harga Sewa', 'required|trim');
     }
 
     public function options_get() {
@@ -64,9 +66,9 @@ class Pelanggan extends REST_Controller
 
         $id = $this->get('id');
         if($id == '') {
-            $data = $this->M_Pelanggan->get_all();
+            $data = $this->M_Mobil->get_all();
         } else {
-            $data = $this->M_Pelanggan->get_by_id($id);
+            $data = $this->M_Mobil->get_by_id($id);
         }
         $this->response($data, 200);
     }
@@ -85,16 +87,22 @@ class Pelanggan extends REST_Controller
             );
             return $this->response($response);
         }
-        $nama = $this->input->post('nama');
-        $alamat = $this->input->post('alamat');
-        $no_hp = $this->input->post('no_hp');
+        $nama_mobil = $this->input->post('nama_mobil');
+        $warna = $this->input->post('warna');
+        $no_polisi = $this->input->post('no_polisi');
+        $jumlah_kursi = $this->input->post('jumlah_kursi');
+        $harga_sewa = $this->input->post('harga_sewa');
+        $status = 1; //tersedia
 
         $data = array(
-            'nama' => $nama,
-            'alamat' => $alamat,
-            'no_hp' => $no_hp,
+            'nama_mobil' => $nama_mobil,
+            'warna' => $warna,
+            'no_polisi' => $no_polisi,
+            'jumlah_kursi' => $jumlah_kursi,
+            'harga_sewa' => $harga_sewa,
+            'status' => $status
         );
-        $this->M_Pelanggan->insert($data);
+        $this->M_Mobil->insert($data);
         $response = array(
                 'status_code' => 201,
                 'message' => 'success',
@@ -110,7 +118,7 @@ class Pelanggan extends REST_Controller
         }
 
         $id = $this->put('id');
-        $check = $this->M_Pelanggan->check_data($id);
+        $check = $this->M_Mobil->check_data($id);
 
         if (!$check) {
             $error = array(
@@ -120,7 +128,7 @@ class Pelanggan extends REST_Controller
                 'status_code' => 502
             );
 
-            return $this->response($error, 502);
+            return $this->response($error);
         }
 
         $this->validate();
@@ -134,13 +142,16 @@ class Pelanggan extends REST_Controller
         }
 
         $data = array(
-            'nama' => $this->put('nama'),
-            'alamat' => $this->put('alamat'),
-            'no_hp' => $this->put('no_hp'),
+            'nama_mobil' => $this->put('nama_mobil'),
+            'warna' => $this->put('warna'),
+            'no_polisi' => $this->put('no_polisi'),
+            'jumlah_kursi' => $this->put('jumlah_kursi'),
+            'harga_sewa' => $this->put('harga_sewa'),
+            'status' => $this->put('status')
         );
 
-        $this->M_Pelanggan->update($id, $data);
-        $newData = $this->M_Pelanggan->get_by_id($id);
+        $this->M_Mobil->update($id, $data);
+        $newData = $this->M_Mobil->check_data($id);
         $response = array(
             'status' => 'success',
             'data' => $newData,
@@ -156,7 +167,7 @@ class Pelanggan extends REST_Controller
         }
 
         $id = $this->delete('id');
-        $check = $this->M_Pelanggan->check_data($id);
+        $check = $this->M_Mobil->check_data($id);
         if($check == false) {
             $error = array(
                 'status' => 'fail',
@@ -167,7 +178,7 @@ class Pelanggan extends REST_Controller
 
             return $this->response($error);
         }
-        $delete = $this->M_Pelanggan->delete($id);
+        $delete = $this->M_Mobil->delete($id);
         $response = array(
             'status' => 'success',
             'data' => $delete,
@@ -175,7 +186,6 @@ class Pelanggan extends REST_Controller
         );
         return $this->response($response);
     }
-
 
 }
 

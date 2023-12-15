@@ -31,7 +31,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="./../dashboard.html">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -43,7 +43,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="./../dashboard.html">
+                <a class="nav-link" href="../dashboard.html">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -53,9 +53,21 @@
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="pelanggan_index.html">
-                    <i class="fas fa-fw fa-users"></i>
-                    <span>Data Pelanggan</span>
+                <a class="nav-link collapsed" href="../mobil/mobil_index.html">
+                    <i class="fas fa-fw fa-car"></i>
+                    <span>Data Mobil</span>
+                </a>
+            </li>            
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#">
+                    <i class="fas fa-fw fa-user"></i>
+                    <span>Data User</span>
+                </a>
+            </li>            
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="../detailTransaksi/transaksi.html">
+                    <i class="fas fa-fw fa-shopping-cart"></i>
+                    <span>Data Transaksi</span>
                 </a>
             </li>            
 
@@ -94,7 +106,7 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
                                 <img class="img-profile rounded-circle"
-                                    src="../../img/undraw_profile.svg">
+                                    src="./../../img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -123,33 +135,33 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">List Data User</h1>       
+                        <a href="user_create.html" class="btn btn-success btn-sm"><i class="fa fa-plus-circle"></i> Tambah Data</a>                 
+                    </div>
+
                     <!-- Content Row -->
                     <div class="row">
 
                         <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-md-12" style="text-align: justify;">
-                            <div class="form-group">
-                                <label for="nama">Nama</label>
-                                <input type="text" name="nama" id="nama" class="form-control" placeholder="Masukkan nama anda" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="alamat">Alamat</label>
-                                <input type="text" name="alamat" id="alamat" class="form-control" placeholder="Masukkan alamat anda" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="no_hp">Phone Number</label>
-                                <input type="text" name="no_hp" id="no_hp" class="form-control" placeholder="Masukkan nomor HP anda" required>
-                            </div>
-                            <div class="form-group">
-                                <a href="pelanggan_index.html" class="btn btn-sm btn-warning">Kembali</a>
-                                <button type="button" class="btn btn-sm btn-success" id="btnSave"><i class="fa fa-save"></i>Simpan</button>
-                            </div>
+                        <div class="col-md-12" style="text-align: center;">
+                            <table class="table table-bordered" style="text-align: center;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 10%;">NO</th>
+                                        <th>USERNAME</th>
+                                        <th>EMAIL</th>
+                                        <th>ROLE</th>
+                                        <th>AKSI</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="myBody">
+
+                                </tbody>
+                            </table>
                         </div>                        
-                    </div>
-
-                    <!-- Content Row -->                    
-
-                    <!-- Content Row -->                    
+                    </div>                  
 
                 </div>
                 <!-- /.container-fluid -->
@@ -193,43 +205,98 @@
     <!-- Page level custom scripts -->
     <script src="../../js/demo/chart-area-demo.js"></script>
     <script src="../../js/demo/chart-pie-demo.js"></script>
-    <script src="handleLogout.js"></script>
+    <script  src="./handleLogout.js"></script>
 
     <script>
-        var base_url = "http://localhost/uasWebpro/server/api/";
+        var base_url = "http://localhost/uasWebpro/server/api/admin/";
+    
         $(document).ready(function(){
             let token = localStorage.getItem('token');
+    
             if (!token) {
                 alert("Harus login dahulu");
                 window.location.href = './../auth/login.html';
+                return;
             }
-            $(document).on("click", '#btnSave', function() {
-                $.ajax({
-                    type: 'POST',
-                    url: base_url + "pelanggan",
-                    headers: {
-                        "Authorization" : "Bearer " + token 
-                    },
-                    data: {
-                        nama: $("#nama").val(),
-                        alamat: $("#alamat").val(),
-                        no_hp: $("#no_hp").val(),
-                    },
-                    dataType: "json",
-                    cache: false,
-                    success:
-                        function(data) {
-                            if (data.status_code == 502){
-                                alert("Inputan tidak boleh kosong");
-                            } else {
-                                window.location.href = 'pelanggan_index.html';
-                                alert("Pelanggan created successfully");
-                            }
+            var role = $(this).data('role_id');
+            if (role === 1) {
+                alert("You do not have permission to access this page");
+                return window.location.href = './404.html';
+            }
+            $.ajax({
+                type: "GET",
+                url: base_url + "user",
+                headers: {
+                    "Authorization" : "Bearer " + token 
+                },
+                dataType: "json",
+                cache: false,
+                success: function(data) {
+                    let dataBody = ``;
+                    for (let i = 0; i < data.length; i++) {
+                        let roleUser = '';
+                        if (data[i].role_id == '2'){
+                            roleUser = 'customer';
+                        } else {
+                            roleUser = 'admin';
                         }
-                })
+                        dataBody+=`
+                            <tr>
+                                <td>${i+1}</td>
+                                <td>${data[i].username}</td>
+                                <td>${data[i].email}</td>
+                                <td>${roleUser}</td>
+                                <td>
+                                    <a href="user_edit.html?id=${data[i].id}" class="btn btn-sm btn-warning btnEdit"><i class="fa fa-pen"></i></a>&nbsp
+                                    <a href="#" data-id="${data[i].id}" class="btn btn-sm btn-danger btnDelete"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>`;
+                    }
+                    $("#myBody").empty();
+                    $("#myBody").append(dataBody);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log("Error: " + textStatus, errorThrown);
+                }
+            });
+        });   
+
+        // delete user :v
+        $(document).on('click', '.btnDelete', function(e) {
+            e.preventDefault();
+            let token = localStorage.getItem('token');
+    
+            if (!token) {
+                alert("Harus login dahulu");
+                window.location.href = './../auth/login.html';
+                return;
+            }
+            
+            var userConfirm = confirm("Apakah anda yakin akan menghapus data ini?");
+                if (userConfirm) {
+                    var userId = $(this).data('id');
+                    var formData = { id: userId };
+                    var dataXURL = $.param(formData);
+
+                    $.ajax( {
+                        type: 'DELETE',
+                        url: base_url + "user?" + dataXURL,
+                        headers: {
+                            "Authorization" : "Bearer " + token 
+                        },
+                        data: dataXURL,
+                        dataType: 'json',
+                        cache: false,
+                        success: 
+                            function(responseData){
+                                alert("user deleted successfully")
+                                location.reload();
+                            }
+                    })
+                }
             })
-        });
     </script>
+    
     
 </body>
 

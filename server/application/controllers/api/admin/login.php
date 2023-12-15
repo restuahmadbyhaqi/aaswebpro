@@ -18,7 +18,7 @@ class Login extends REST_Controller
             die();
         }
         $this->load->database();
-        $this->load->model('M_User');
+        $this->load->model('M_Auth');
         $this->load->library('form_validation');
         $this->load->library('jwt');
     }
@@ -51,7 +51,7 @@ class Login extends REST_Controller
         $email = $this->input->post('email');
         $password = md5($this->input->post('password'));
     
-        $user = $this->M_User->cek_login($email, $password);
+        $user = $this->M_Auth->cek_login($email, $password);
     
         if (!$user) {
             $response = array(
@@ -62,10 +62,6 @@ class Login extends REST_Controller
         }
     
         $token = $this->jwt->encode($email, $password);
-
-        // $expiryDate = time() + 3600;
-
-        // setcookie('access_token', $token, $expiryDate, 'http://127.0.0.1', '', false, true);
     
         $response = array(
             'status_code' => 200,

@@ -8,6 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta name="referrer" content="no-referrer">
+    <meta name="referrer" content="unsafe-url">
+
 
     <title>WebPro 2 - Dashboard</title>
 
@@ -31,7 +34,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="./../dashboard.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -43,7 +46,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="../dashboard.html">
+                <a class="nav-link" href="./../dashboard.html">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -53,21 +56,9 @@
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="../mobil/mobil_index.html">
-                    <i class="fas fa-fw fa-car"></i>
-                    <span>Data Mobil</span>
-                </a>
-            </li>            
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#">
-                    <i class="fas fa-fw fa-users"></i>
-                    <span>Data Pelanggan</span>
-                </a>
-            </li>            
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="../detailTransaksi/transaksi.html">
-                    <i class="fas fa-fw fa-shopping-cart"></i>
-                    <span>Data Transaksi</span>
+                <a class="nav-link collapsed" href="user_index.html">
+                    <i class="fas fa-fw fa-user"></i>
+                    <span>Data User</span>
                 </a>
             </li>            
 
@@ -106,7 +97,7 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
                                 <img class="img-profile rounded-circle"
-                                    src="./../../img/undraw_profile.svg">
+                                    src="../../img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -135,33 +126,33 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">List Data Pelanggan</h1>       
-                        <a href="pelanggan_create.html" class="btn btn-success btn-sm"><i class="fa fa-plus-circle"></i> Tambah Data</a>                 
-                    </div>
-
                     <!-- Content Row -->
                     <div class="row">
 
                         <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-md-12" style="text-align: center;">
-                            <table class="table table-bordered" style="text-align: center;">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 10%;">NO</th>
-                                        <th>NAMA</th>
-                                        <th>ALAMAT</th>
-                                        <th>NOMOR HANDPHONE</th>
-                                        <th>AKSI</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="myBody">
-
-                                </tbody>
-                            </table>
+                        <div class="col-md-12" style="text-align: justify;">
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" name="username" id="username" class="form-control" placeholder="Masukkan username user" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="text" name="email" id="email" class="form-control" placeholder="Masukkan email user" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" name="password" id="password" class="form-control" placeholder="Masukkan nomor password user" required>
+                            </div>
+                            <div class="form-group">
+                                <a href="user_index.html" class="btn btn-sm btn-warning">Kembali</a>
+                                <button type="button" class="btn btn-sm btn-success" id="btnSave"><i class="fa fa-save"></i>Simpan</button>
+                            </div>
                         </div>                        
-                    </div>                  
+                    </div>
+
+                    <!-- Content Row -->                    
+
+                    <!-- Content Row -->                    
 
                 </div>
                 <!-- /.container-fluid -->
@@ -192,6 +183,7 @@
     <!-- Bootstrap core JavaScript-->
     <script src="../../vendor/jquery/jquery.min.js"></script>
     <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <!-- Core plugin JavaScript-->
     <script src="../../vendor/jquery-easing/jquery.easing.min.js"></script>
@@ -205,82 +197,47 @@
     <!-- Page level custom scripts -->
     <script src="../../js/demo/chart-area-demo.js"></script>
     <script src="../../js/demo/chart-pie-demo.js"></script>
-    <script src="handleLogout.js"></script>
+    <script  src="../handleLogout.js"></script>
+
 
     <script>
-        var base_url = "http://localhost/uasWebpro/server/api/";
-
+        var base_url = "http://localhost/uasWebpro/server/admin/api/";
         $(document).ready(function(){
             let token = localStorage.getItem('token');
-
             if (!token) {
                 alert("Harus login dahulu");
                 window.location.href = './../auth/login.html';
             }
-
-            $.ajax({
-                type: "GET",
-                url: base_url + "pelanggan",
-                headers: {
-                    "Authorization" : "Bearer " + token 
-                },
-                data: {
-                    id: ''
-                },
-                dataType: "json",
-                cache: false,
-                success: function(responseData) {
-                    let dataBody = ``;
-                    for (let i = 0; i < responseData.length; i++) {
-                        dataBody+=`
-                            <tr>
-                                <td>${i+1}</td>
-                                <td>${responseData[i].nama}</td>
-                                <td>${responseData[i].alamat}</td>
-                                <td>${responseData[i].no_hp}</td>
-                                <td>
-                                    <a href="pelanggan_edit.html?id=${responseData[i].id}" class="btn btn-sm btn-warning btnEdit"><i class="fa fa-pen"></i></a>&nbsp
-                                    <a href="#" data-id="${responseData[i].id}" class="btn btn-sm btn-danger btnDelete"><i class="fa fa-trash"></i></a>
-                                </td>
-                            </tr>`;
-                    }
-                    $("#myBody").empty();
-                    $("#myBody").append(dataBody);
-                }
+            
+            $(document).on("click", '#btnSave', function() {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + "user",
+                    headers: {
+                        "Authorization" : "Bearer " + token 
+                    },
+                    data: {
+                        username: $("#username").val(),
+                        email: $("#email").val(),
+                        password: $("#password").val(),
+                    },
+                    dataType: "json",
+                    cache: false,
+                    success:
+                        function(data) {
+                            if (data.status_code == 502){
+                                alert("Inputan tidak boleh kosong");
+                            } else if (data.status_code == 409) {
+                                alert("Inputan user harus unique")
+                            }
+                            else {
+                                window.location.href = 'user_index.html';
+                                alert("Pelanggan created successfully");
+                            }
+                        }
+                })
             })
         });
-
-        // delete pelanggan :v
-        $(document).on('click', '.btnDelete', function() {
-            var userConfirm = confirm("Apakah anda yakin akan menghapus data ini?");
-                if (userConfirm) {
-                    let token = localStorage.getItem('token');
-        
-                    if (!token) {
-                        alert("Harus login dahulu");
-                        window.location.href = './../auth/login.html';
-                    }
-
-                    pelangganId = $(this).data('id');
-                    $.ajax( {
-                        type: 'DELETE',
-                        url: base_url + "pelanggan",
-                        headers: {
-                            "Authorization" : "Bearer " + token 
-                        },
-                        data: {
-                            id: pelangganId
-                        },
-                        dataType: 'json',
-                        cache: false,
-                        success: 
-                            function(responseData){
-                                alert("Mobil deleted successfully")
-                                location.reload();
-                            }
-                    })
-            }
-        })
     </script>
     
 </body>

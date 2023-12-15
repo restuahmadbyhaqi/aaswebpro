@@ -16,7 +16,7 @@ class Transaksi extends REST_Controller
             exit;
         }
         $this->load->database();
-        $this->load->model('M_Detail_Rental');
+        $this->load->model('M_Transaksi');
         $this->load->library('form_validation');
         $this->load->library('jwt');
     }
@@ -63,9 +63,9 @@ class Transaksi extends REST_Controller
 
         $id = $this->get('id');
         if($id == '') {
-            $data = $this->M_Detail_Rental->get_all();
+            $data = $this->M_Transaksi->get_all();
         } else {
-            $data = $this->M_Detail_Rental->get_by_id($id);
+            $data = $this->M_Transaksi->get_by_id($id);
         }
         $this->response($data, 200);
     }
@@ -122,7 +122,7 @@ class Transaksi extends REST_Controller
             'tgl_kembali' => $this->post('tgl_kembali'),
         ];
 
-        if ($this->M_Detail_Rental->insert($data)) {
+        if ($this->M_Transaksi->insert($data)) {
             $response = array(
                 'status_code' => 201,
                 'message' => 'success',
@@ -140,59 +140,14 @@ class Transaksi extends REST_Controller
         }
     }
     
-    public function index_put(){
-        if (!$this->is_login()) {
-            return;
-        }
-
-        $id = $this->put('id');
-        $check = $this->M_Detail_Rental->check_data($id);
-
-        if (!$check) {
-            $error = array(
-                'status' => 'fail',
-                'field' => 'id',
-                'message' => 'ID is not found',
-                'status_code' => 502
-            );
-
-            return $this->response($error, 502);
-        }
-
-        $this->validate();
-        if ($this->form_validation->run() === FALSE) {
-            $error = $this->form_validation->error_array();
-            $response = array(
-                'status_code' => 502,
-                'message' => $error
-            );
-            return $this->response($response);
-        }
-
-        $data = array(
-            'nama' => $this->put('nama'),
-            'alamat' => $this->put('alamat'),
-            'no_hp' => $this->put('no_hp'),
-        );
-
-        $this->M_Detail_Rental->update($id, $data);
-        $newData = $this->M_Detail_Rental->get_by_id($id);
-        $response = array(
-            'status' => 'success',
-            'data' => $newData,
-            'status_code' => 200
-        );
-
-        return $this->response($response, 200);
-    }
-    
     function index_delete() {
         if (!$this->is_login()) {
             return;
         }
-
+    
         $id = $this->delete('id');
-        $check = $this->M_Detail_Rental->check_data($id);
+        $check = $this->M_Transaksi->get_by_id($id);
+    
         if($check == false) {
             $error = array(
                 'status' => 'fail',
@@ -200,17 +155,34 @@ class Transaksi extends REST_Controller
                 'message' => 'id is not found',
                 'status_code' => 502
             );
-
+    
             return $this->response($error);
         }
-        $delete = $this->M_Detail_Rental->delete($id);
+    
+        $transaksiData = $this->M_Transaksi->get_by_id($id);
+        $idMobil = $transaksiData['id_mobil'];
+    
+        $delete = $this->M_Transaksi->delete($id);
+    
+        $mobilStillInUse = $this->mobilExist($idMobil);
+    
+        if (!$mobilStillInUse) {
+            $updateStatusQuery = "UPDATE mobil SET status = 1 WHERE id = $idMobil";
+            $this->db->query($updateStatusQuery);
+        
+            echo $updateStatusQuery;
+        }
+        
+    
         $response = array(
             'status' => 'success',
             'data' => $delete,
             'status_code' => 200
         );
+    
         return $this->response($response);
     }
+    
 
 }
 

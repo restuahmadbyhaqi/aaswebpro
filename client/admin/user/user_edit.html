@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    
     <title>WebPro 2 - Dashboard</title>
 
     <!-- Custom fonts -->
@@ -47,9 +48,9 @@
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="pelanggan_index.html">
-                    <i class="fas fa-fw fa-car"></i>
-                    <span>Data pelanggan</span>
+                <a class="nav-link collapsed" href="user_index.html">
+                    <i class="fas fa-fw fa-user"></i>
+                    <span>Data User</span>
                 </a>
             </li>
 
@@ -93,21 +94,29 @@
                             <!-- Earnings (Monthly) Card Example -->
                             <div class="col-md-12" style="text-align: justify;">
                                 <div class="form-group">
-                                    <label for="name">Nama </label>
+                                    <label for="name">Username</label>
                                     <input type="hidden" name="id" id="id" value="">
-                                    <input type="text" name="nama" id="nama" class="form-control" placeholder="Masukkan nama " required>
+                                    <input type="text" name="username" id="username" class="form-control" placeholder="Masukkan username customer" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="alamat">Warna pelanggan</label>
-                                    <input type="text" name="alamat" id="alamat" class="form-control" placeholder="Masukkan alamat" required>
+                                    <label for="number">Email </label>
+                                    <input type="text" name="email" id="email" class="form-control" placeholder="Masukkan email customer" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="no_hp">Nomor HP</label>
-                                    <input type="text" name="no_hp" id="no_hp" class="form-control" placeholder="Masukkan nomor polisi pelanggan" required>
+                                    <label for="number">Password</label>
+                                    <input type="password" name="password" id="password" class="form-control" placeholder="Masukkan Password customer" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="font-weight-bold" for="tahun">Role</label>
+                                    <select name="role_id" id="role_id" class="form-control" required="required">
+                                        <option value="">- Pilih Role</option>
+                                        <option value="1">Admin</option>
+                                        <option value="2">Customer</option>
+                                    </select>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <a href="pelanggan_index.html" class="btn btn-sm btn-warning">Kembali</a>
+                                    <a href="user_index.html" class="btn btn-sm btn-warning">Kembali</a>
                                     <button type="button" class="btn btn-sm btn-success" id="btnSave"><i class="fa fa-save"></i>Simpan</button>
                                 </div>
                             </div>
@@ -139,48 +148,46 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
-
     <!-- jQuery and Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript -->
     <script src="../../vendor/jquery-easing/jquery.easing.min.js"></script>
-    <script src="handleLogout.js"></script>
+    <script  src="./handleLogout.js"></script>
 
     <!-- Your custom script -->
     <script>
-        var base_url = "http://localhost/uasWebpro/server/index.php/api/pelanggan?id=";
+        var base_url = "http://localhost/uasWebpro/server/api/admin/user?id=";
     
-        // Get data by id
+        // Get data 
         $(document).ready(function () {
             let token = localStorage.getItem('token');
-            var pelangganId = new URLSearchParams(window.location.search).get('id');
-            document.getElementById('id').value = pelangganId;
+            var userId = new URLSearchParams(window.location.search).get('id');
+            document.getElementById('id').value = userId;
             
-            if (!pelangganId) {
-                console.log("Pelanggan ID not found");
-                window.location.href = 'pelanggan_index.html';
-                return;
+            if (!userId) {
+                console.log("User ID not found");
+                return window.location.href = 'user_index.html';
             }
     
             if (!token) {
                 alert("Harus login dahulu");
-                window.location.href = './../auth/login.html';
-                return;
+                return window.location.href = './../auth/login.html';
             }
-    
+
             $.ajax({
                 method: 'GET',
-                url: base_url + pelangganId,
+                url: base_url + userId,
                 headers: {
                     "Authorization": "Bearer " + token
                 },
                 dataType: "json",
                 success: function (data) {
-                    $("#nama").val(data.nama);
-                    $("#alamat").val(data.alamat);
-                    $("#no_hp").val(data.no_hp);
+                    $("#username").val(data.username);
+                    $("#email").val(data.email);
+                    // $("#password").val(data.password);
+                    $("#role_id").val(data.role_id);
                 },
                 error: function (xhr, textStatus, errorThrown) {
                     console.error('AJAX request failed: ', textStatus, errorThrown);
@@ -189,46 +196,40 @@
         });
 
         // update data
-        $(document).ready(function () {
-        let token = localStorage.getItem('token');
-
-        if (!token) {
-            alert("Harus login dahulu");
-            window.location.href = './../auth/login.html';
-        }
-
-        $('#btnSave').click(function () {
-            idPelanggan = new URLSearchParams(window.location.search).get('id');
+        $(document).ready(function () {    
+        $(document).on('click', '#btnSave', function () {
+            let token = localStorage.getItem('token');
+    
+            if (!token) {
+                alert("Harus login dahulu");
+                window.location.href = './../auth/login.html';
+            }
+            userId = new URLSearchParams(window.location.search).get('id');
             var formData = $('#formId').serialize();
-            if (idPelanggan) {
-                    formData += '&id=' + idPelanggan;
+            if (userId) {
+                    formData += '&id=' + userId;
                 }
-
             $.ajax({
-                contentType: 'application/x-www-form-urlencoded',
+                contentType: 'application/json',
                 type: 'PUT',
-                url: "http://localhost/uasWebpro/server/index.php/api/pelanggan",
+                url: "http://localhost/uasWebpro/server/index.php/admin/api/user",
                 headers: {
                     "Authorization": "Bearer " + token
                 },
                 data:formData,
                 success: function (data) {
-
                     if (data.status_code === 502) {
                         alert("Inputan tidak boleh kosong");
                     } else if (data.status_code === 200) {
-                        alert("Pelanggan updated successfully");
-                        window.location.href = 'pelanggan_index.html';
+                        alert("Mobil updated successfully");
+                        window.location.href = 'user_index.html';
                     } else {
                         console.error("Unexpected response:", data);
                         alert("Unexpected response from the server");
                     }
-                },
-                error: function (error) {
-                    console.error("Ajax request failed:", error);
-                    alert("Failed to update pelanggan. Please check the console for details.");
                 }
             });
+            
         });
     });
             

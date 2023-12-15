@@ -59,9 +59,9 @@
                 </a>
             </li>            
             <li class="nav-item">
-                <a class="nav-link collapsed" href="../pelanggan/pelanggan_index.html">
-                    <i class="fas fa-fw fa-users"></i>
-                    <span>Data Pelanggan</span>
+                <a class="nav-link collapsed" href="../user/user_index.html">
+                    <i class="fas fa-fw fa-user"></i>
+                    <span>Data user</span>
                 </a>
             </li>            
             <li class="nav-item">
@@ -154,7 +154,7 @@
                                         <th>MOBIL YANG DIPINJAM</th>
                                         <th>TANGGAL PINJAM</th>
                                         <th>TANGGAL KEMBALI</th>
-                                        <th>HARGA</th>
+                                        <th>HARGA SEWA/HARI</th>
                                         <th>AKSI</th>
                                     </tr>
                                 </thead>
@@ -207,10 +207,10 @@
     <!-- Page level custom scripts -->
     <script src="../../js/demo/chart-area-demo.js"></script>
     <script src="../../js/demo/chart-pie-demo.js"></script>
-    <script src="handleLogout.js"></script>
+    <script  src="./handleLogout.js"></script>
 
     <script>
-        var base_url = "http://localhost/uasWebpro/server/api/";
+        var base_url = "http://localhost/uasWebpro/server/api/admin/";
 
         $(document).ready(function(){
             let token = localStorage.getItem('token');
@@ -219,6 +219,12 @@
                 alert("Harus login dahulu");
                 window.location.href = './../auth/login.html';
             }
+
+            var role = $(this).data('role_id');
+                    if (role === 1) {
+                        alert("You do not have permission to access this page");
+                        return window.location.href = './404.html';
+                    }
 
             $.ajax({
                 type: "GET",
@@ -237,14 +243,13 @@
                         dataBody+=`
                             <tr>
                                 <td>${i+1}</td>
-                                <td>${responseData[i].nama_pelanggan}</td>
+                                <td>${responseData[i].nama}</td>
                                 <td>${responseData[i].nama_mobil}</td>
                                 <td>${responseData[i].tgl_pinjam}</td>
                                 <td>${responseData[i].tgl_kembali}</td>
-                                <td>${responseData[i].harga}</td>
+                                <td>${responseData[i].harga_sewa}</td>
                                 <td>
-                                    <a href="pelanggan_edit.html?id=${responseData[i].id}" class="btn btn-sm btn-warning btnEdit"><i class="fa fa-pen"></i></a>&nbsp
-                                    <a href="#" data-id="${responseData[i].id}" class="btn btn-sm btn-danger btnDelete"><i class="fa fa-trash"></i></a>
+                                    <a href="#" data-id="${responseData[i].id}" class="btn btn-sm btn-success mobilKembali">Dikembalikan</i></a>
                                 </td>
                             </tr>`;
                     }
@@ -254,36 +259,32 @@
             })
         });
 
-        // delete pelanggan :v
-        $(document).on('click', '.btnDelete', function() {
-            var userConfirm = confirm("Apakah anda yakin akan menghapus data ini?");
-                if (userConfirm) {
-                    let token = localStorage.getItem('token');
+        $(document).on('click', '.mobilKembali', function() {
+            let token = localStorage.getItem('token');
         
                     if (!token) {
                         alert("Harus login dahulu");
                         window.location.href = './../auth/login.html';
                     }
 
-                    pelangganId = $(this).data('id');
+                    transaksiId = $(this).data('id');
                     $.ajax( {
                         type: 'DELETE',
-                        url: base_url + "pelanggan",
+                        url: base_url + "transaksi",
                         headers: {
                             "Authorization" : "Bearer " + token 
                         },
                         data: {
-                            id: pelangganId
+                            id: transaksiId
                         },
                         dataType: 'json',
                         cache: false,
                         success: 
                             function(responseData){
-                                alert("Mobil deleted successfully")
+                                alert("Mobil berhasil dikembalikan")
                                 location.reload();
                             }
                     })
-            }
         })
     </script>
     

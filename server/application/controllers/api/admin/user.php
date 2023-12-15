@@ -5,18 +5,18 @@ require APPPATH . '/libraries/REST_Controller.php';
 require_once FCPATH . 'vendor/autoload.php';
 
 use Restserver\Libraries\REST_Controller;
-class Mobil extends REST_Controller
+class User extends REST_Controller
 {
     function __construct($config = 'rest'){
         parent::__construct($config);
         if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
             header("Access-Control-Allow-Origin: *");
-            header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
-            header("Access-Control-Allow-Headers: Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method, ");
+            header("Access-Control-Allow-Methods: OPTIONS, GET, POST, PUT, DELETE, PATCH");
+            header("Access-Control-Allow-Headers: Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method, X-My-Custom-Header");
             exit;
         }
         $this->load->database();
-        $this->load->model('M_Mobil');
+        $this->load->model('M_User');
         $this->load->library('form_validation');
         $this->load->library('jwt');
     }
@@ -27,10 +27,9 @@ class Mobil extends REST_Controller
 
         $this->form_validation->set_data($put_data);
         
-        $this->form_validation->set_rules('nama_mobil', 'Nama Mobil', 'required|trim');
-        $this->form_validation->set_rules('warna', 'Warna Mobil','required|trim');
-        $this->form_validation->set_rules('no_polisi', 'Nomor Polisi', 'required|trim');
-        $this->form_validation->set_rules('jumlah_kursi', 'Jumlah Kursi', 'required|trim|numeric');
+        $this->form_validation->set_rules('username', 'Username', 'required');
+        $this->form_validation->set_rules('email', 'Email','required|valid_email');
+        $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
     }
 
     public function options_get() {
@@ -58,17 +57,15 @@ class Mobil extends REST_Controller
     }
 
     function index_get() {
-        if (!$this->is_login()) {
-            return;
-        }
-
         $id = $this->get('id');
-        if($id == '') {
-            $data = $this->M_Mobil->get_all();
+        
+        if ($id == '') {
+            $data = $this->M_User->getCustomer();
         } else {
-            $data = $this->M_Mobil->get_by_id($id);
+            $data = $this->M_User->get_by_id($id);
         }
-        $this->response($data, 200);
+    
+        $this->response($data);
     }
     
     function index_post(){
@@ -85,27 +82,35 @@ class Mobil extends REST_Controller
             );
             return $this->response($response);
         }
-        $nama_mobil = $this->input->post('nama_mobil');
-        $warna = $this->input->post('warna');
-        $no_polisi = $this->input->post('no_polisi');
-        $jumlah_kursi = $this->input->post('jumlah_kursi');
-        $status = 1; //tersedia
+        $username = $this->input->post('username');
+        $email = $this->input->post('email');
+        $password = md5($this->input->post('password'));
+        $role_id = 2;
+
+        $user = $this->M_User->userExist($email, $password);
+        if ($user) {
+            $response = array(
+                'status_code' => 409,
+                'message' => 'User already exists'
+            );
+            return $this->response($response);
+        }
 
         $data = array(
-            'nama_mobil' => $nama_mobil,
-            'warna' => $warna,
-            'no_polisi' => $no_polisi,
-            'jumlah_kursi' => $jumlah_kursi,
-            'status' => $status
+            'username' => $username,
+            'email' => $email,
+            'password' => $password,
+            'role_id' => $role_id
         );
-        $this->M_Mobil->insert($data);
+
+        $this->M_User->insert($data);
         $response = array(
                 'status_code' => 201,
                 'message' => 'success',
                 'data' => $data,
-            );
+        );
 
-            return $this->response($response);
+        return $this->response($response);
     }
 
     public function index_put(){
@@ -114,7 +119,7 @@ class Mobil extends REST_Controller
         }
 
         $id = $this->put('id');
-        $check = $this->M_Mobil->check_data($id);
+        $check = $this->M_User->check_data($id);
 
         if (!$check) {
             $error = array(
@@ -138,18 +143,17 @@ class Mobil extends REST_Controller
         }
 
         $data = array(
-            'nama_mobil' => $this->put('nama_mobil'),
-            'warna' => $this->put('warna'),
-            'no_polisi' => $this->put('no_polisi'),
-            'jumlah_kursi' => $this->put('jumlah_kursi'),
-            'status' => $this->put('status')
+            'username' => $this->put('username'),
+            'email' => $this->put('email'),
+            'password' => md5($this->put('password')),
+            'role_id' => $this->put('role_id'),
         );
 
-        $this->M_Mobil->update($id, $data);
-        $newData = $this->M_Mobil->get_by_id($id);
+        $this->M_User->update($id, $data);
+        $newData = $this->M_User->check_data($id);
         $response = array(
             'status' => 'success',
-            'data' => $newData,
+            'data' => $data,
             'status_code' => 200
         );
 
@@ -157,12 +161,8 @@ class Mobil extends REST_Controller
     }
     
     function index_delete() {
-        if (!$this->is_login()) {
-            return;
-        }
-
         $id = $this->delete('id');
-        $check = $this->M_Mobil->check_data($id);
+        $check = $this->M_User->check_data($id);
         if($check == false) {
             $error = array(
                 'status' => 'fail',
@@ -173,7 +173,7 @@ class Mobil extends REST_Controller
 
             return $this->response($error);
         }
-        $delete = $this->M_Mobil->delete($id);
+        $delete = $this->M_User->delete($id);
         $response = array(
             'status' => 'success',
             'data' => $delete,
@@ -181,6 +181,8 @@ class Mobil extends REST_Controller
         );
         return $this->response($response);
     }
+
+
 
 }
 

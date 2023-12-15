@@ -1,0 +1,3 @@
+Error:
+1. Cors USER 
+2. Pengembalian transaksi id undefined

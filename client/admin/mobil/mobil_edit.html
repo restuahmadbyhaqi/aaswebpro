@@ -93,8 +93,8 @@
                             <!-- Earnings (Monthly) Card Example -->
                             <div class="col-md-12" style="text-align: justify;">
                                 <div class="form-group">
-                                    <label for="name">Nama Mobil</label>
                                     <input type="hidden" name="id" id="id" value="">
+                                    <label for="name">Nama Mobil</label>
                                     <input type="text" name="nama_mobil" id="nama_mobil" class="form-control" placeholder="Masukkan nama mobil" required>
                                 </div>
                                 <div class="form-group">
@@ -108,6 +108,10 @@
                                 <div class="form-group">
                                     <label for="number">Jumlah Kursi</label>
                                     <input type="number" name="jumlah_kursi" id="jumlah_kursi" class="form-control" placeholder="Masukkan jumlah kursi mobil" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="number">Harga Sewa/Hari</label>
+                                    <input type="text" name="harga_sewa" id="harga_sewa" class="form-control" placeholder="Masukkan Harga Sewa mobil perhari" required>
                                 </div>
                                 <div class="form-group">
                                     <label class="font-weight-bold" for="tahun">Status</label>
@@ -157,14 +161,20 @@
 
     <!-- Core plugin JavaScript -->
     <script src="../../vendor/jquery-easing/jquery.easing.min.js"></script>
-    <script src="handleLogout.js"></script>
+    <script  src="./handleLogout.js"></script>
 
     <!-- Your custom script -->
     <script>
-        var base_url = "http://localhost/uasWebpro/server/index.php/api/mobil?id=";
+        var base_url = "http://localhost/uasWebpro/server/api/admin/mobil?id=";
+        
     
         // Get data by id
         $(document).ready(function () {
+            var role = $(this).data('role_id');
+            if (role === 1) {
+                alert("You do not have permission to access this page");
+                return window.location.href = '../404.html';
+            }
             let token = localStorage.getItem('token');
             var mobilId = new URLSearchParams(window.location.search).get('id');
             document.getElementById('id').value = mobilId;
@@ -189,10 +199,12 @@
                 },
                 dataType: "json",
                 success: function (data) {
+                    console.log(data);
                     $("#nama_mobil").val(data.nama_mobil);
                     $("#warna").val(data.warna);
                     $("#no_polisi").val(data.no_polisi);
                     $("#jumlah_kursi").val(data.jumlah_kursi);
+                    $("#harga_sewa").val(data.harga_sewa);
                     $("#status").val(data.status);
                 },
                 error: function (xhr, textStatus, errorThrown) {
@@ -220,7 +232,7 @@
             $.ajax({
                 contentType: 'application/x-www-form-urlencoded',
                 type: 'PUT',
-                url: "http://localhost/uasWebpro/server/index.php/api/mobil",
+                url: "http://localhost/uasWebpro/server/index.php/api/admin/mobil",
                 headers: {
                     "Authorization": "Bearer " + token
                 },
