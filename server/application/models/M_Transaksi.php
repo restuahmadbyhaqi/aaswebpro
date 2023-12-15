@@ -38,6 +38,15 @@ class M_Transaksi extends CI_Model {
             return false;
         }
     }
+
+    function customerSewaMobil($data) {
+        $this->db->insert('transaksi', $data);
+        if($this->db->affected_rows()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     
 
 }

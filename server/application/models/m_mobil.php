@@ -50,5 +50,36 @@
                 return false;
             }
         }
+
+        function getMobilForCustomer() {
+            $mobilForCust = "SELECT mobil.id,mobil.nama_mobil, mobil.warna, mobil.no_polisi, mobil.jumlah_kursi, mobil.harga_sewa, mobil.status FROM mobil WHERE mobil.status = 1";
+            $resultQuery = $this->db->query($mobilForCust);
+            return $resultQuery->result();
+        }
+
+        function mobilExist($idMobil) {
+            $queryTransaksi = "SELECT * FROM transaksi WHERE id_Mobil = $idMobil";
+            $queryMobil = "SELECT * FROM mobil WHERE id = $idMobil";
+        
+            $resultTransaksi = $this->db->query($queryTransaksi);
+            $resultMobil = $this->db->query($queryMobil);
+        
+            $mobilExists = $resultTransaksi->num_rows() > 0 || $resultMobil->num_rows() === 0;
+        
+            if (!$mobilExists) {
+                $updateStatusQuery = "UPDATE mobil SET status = 2 WHERE id = $idMobil";
+                $this->db->query($updateStatusQuery);
+            }
+        
+            return $mobilExists;
+        }
+
+        public function mobilDiSewa($id) {
+            $data = array(
+                'status' => 2
+            );
+            $this->db->where('id', $id);
+            $this->db->update('mobil_table', $data); 
+        }
     }
 ?>
