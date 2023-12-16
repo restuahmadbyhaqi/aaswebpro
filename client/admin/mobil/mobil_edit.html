@@ -176,18 +176,18 @@
                 return window.location.href = '../404.html';
             }
             let token = localStorage.getItem('token');
+            if (!token) {
+                alert("Harus login dahulu");
+                window.location.href = './../auth/login.html';
+                return;
+            }
+
             var mobilId = new URLSearchParams(window.location.search).get('id');
             document.getElementById('id').value = mobilId;
             
             if (!mobilId) {
                 console.log("Mobil ID not found");
                 window.location.href = 'mobil_index.html';
-                return;
-            }
-    
-            if (!token) {
-                alert("Harus login dahulu");
-                window.location.href = './../auth/login.html';
                 return;
             }
     

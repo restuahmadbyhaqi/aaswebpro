@@ -22,6 +22,13 @@ class Mobil extends REST_Controller
         $this->load->library('jwt');
     }
 
+    public function options_get() {
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+        header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+        exit();
+    }
+
     function validate(){
         $input_data = file_get_contents("php://input");
         parse_str($input_data, $put_data);
@@ -33,13 +40,6 @@ class Mobil extends REST_Controller
         $this->form_validation->set_rules('no_polisi', 'Nomor Polisi', 'required|trim');
         $this->form_validation->set_rules('jumlah_kursi', 'Jumlah Kursi', 'required|trim|numeric');
         $this->form_validation->set_rules('harga_sewa', 'Harga Sewa', 'required|trim');
-    }
-
-    public function options_get() {
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
-        header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-        exit();
     }
 
     function is_login() {

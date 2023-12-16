@@ -2,16 +2,16 @@
     class M_User extends CI_Model {
 
         function getCustomer() {
-            $queryCust = "SELECT user.id,user.username,user.email, user.role_id FROM user WHERE user.role_id = 2";
+            $queryCust = "SELECT * FROM user WHERE user.role_id = 2";
             $resultCust = $this->db->query($queryCust);
-            return $resultCust->result();
+            return $resultCust->result_array();
         }
 
         function get_by_id($id) {
             $this->db->where('id', $id);
-            $query = $this->db->get('mobil');
+            $query = $this->db->get('user');
             return $query->row();
-        }
+        }        
 
         function check_data($id) {
             $this->db->where('id', $id);
@@ -22,6 +22,13 @@
             } else {
                 return false;
             }
+        }
+
+        function update($id, $data) {
+            $this->db->where('id', $id);
+            $result = $this->db->update('user', $data);
+
+            return $result;
         }
 
         function userExist($email, $password) {
@@ -46,13 +53,6 @@
             }
         }
 
-        
-
-        function update($id, $data) {
-            $this->db->where('id', $id);
-            $this->db->update('user', $data);
-        }
-        
         function delete($id) {
             $this->db->where('id', $id);
             $this->db->delete('user');

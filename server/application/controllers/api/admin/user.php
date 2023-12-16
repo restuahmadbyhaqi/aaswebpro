@@ -9,11 +9,14 @@ class User extends REST_Controller
 {
     function __construct($config = 'rest'){
         parent::__construct($config);
-        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+        
+        if ($_SERVER['REQUEST_METHOD'] !== 'OPTIONS') {
             header("Access-Control-Allow-Origin: *");
             header("Access-Control-Allow-Methods: OPTIONS, GET, POST, PUT, DELETE, PATCH");
             header("Access-Control-Allow-Headers: Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method, X-My-Custom-Header");
-            exit;
+             
+        } else {
+            exit(); 
         }
         $this->load->database();
         $this->load->model('M_User');
@@ -141,23 +144,36 @@ class User extends REST_Controller
             );
             return $this->response($response);
         }
+        $username = $this->put('username');
+        $email = $this->put('email');
+        $password = md5($this->put('password'));
+        $role_id = $this->put('role_id');
+
+        $user = $this->M_User->userExist($email, $password);
+        if ($user) {
+            $response = array(
+                'status_code' => 409,
+                'message' => 'User already exists'
+            );
+            return $this->response($response);
+        }
 
         $data = array(
-            'username' => $this->put('username'),
-            'email' => $this->put('email'),
-            'password' => md5($this->put('password')),
-            'role_id' => $this->put('role_id'),
+            'username' => $username,
+            'email' => $email,
+            'password' => $password,
+            'role_id' => $role_id,
         );
 
         $this->M_User->update($id, $data);
         $newData = $this->M_User->check_data($id);
         $response = array(
             'status' => 'success',
-            'data' => $data,
+            'data' => $newData,
             'status_code' => 200
         );
 
-        return $this->response($response, 200);
+        return $this->response($response);
     }
     
     function index_delete() {

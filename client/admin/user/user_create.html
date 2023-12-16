@@ -211,8 +211,8 @@
             
             $(document).on("click", '#btnSave', function() {
                 $.ajax({
-                    type: 'POST',
-                    url: base_url + "user",
+                    method: 'POST',
+                    url: "http://127.0.0.1/uasWebpro/server/index.php/api/admin/user",
                     headers: {
                         "Authorization" : "Bearer " + token 
                     },

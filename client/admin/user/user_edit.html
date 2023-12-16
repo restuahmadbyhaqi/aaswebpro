@@ -94,8 +94,8 @@
                             <!-- Earnings (Monthly) Card Example -->
                             <div class="col-md-12" style="text-align: justify;">
                                 <div class="form-group">
-                                    <label for="name">Username</label>
                                     <input type="hidden" name="id" id="id" value="">
+                                    <label for="name">Username</label>
                                     <input type="text" name="username" id="username" class="form-control" placeholder="Masukkan username customer" required>
                                 </div>
                                 <div class="form-group">
@@ -158,32 +158,34 @@
 
     <!-- Your custom script -->
     <script>
-        var base_url = "http://localhost/uasWebpro/server/api/admin/user?id=";
-    
         // Get data 
         $(document).ready(function () {
             let token = localStorage.getItem('token');
-            var userId = new URLSearchParams(window.location.search).get('id');
-            document.getElementById('id').value = userId;
             
-            if (!userId) {
-                console.log("User ID not found");
-                return window.location.href = 'user_index.html';
-            }
-    
             if (!token) {
                 alert("Harus login dahulu");
                 return window.location.href = './../auth/login.html';
             }
 
+            var userId = new URLSearchParams(window.location.search).get('id');
+            document.getElementById('id').value = userId;
+
+            console.log(userId);
+            
+            if (!userId) {
+                console.log("User ID not found");
+                return window.location.href = 'user_index.html';
+            }
+
             $.ajax({
                 method: 'GET',
-                url: base_url + userId,
+                url: 'http://127.0.0.1/uasWebpro/server/index.php/api/admin/user?id=' + userId,
                 headers: {
                     "Authorization": "Bearer " + token
                 },
                 dataType: "json",
                 success: function (data) {
+                    console.log(data);
                     $("#username").val(data.username);
                     $("#email").val(data.email);
                     // $("#password").val(data.password);
@@ -197,36 +199,43 @@
 
         // update data
         $(document).ready(function () {    
-        $(document).on('click', '#btnSave', function () {
             let token = localStorage.getItem('token');
-    
+            
             if (!token) {
                 alert("Harus login dahulu");
-                window.location.href = './../auth/login.html';
+                return window.location.href = './../auth/login.html';
             }
+        $(document).on('click', '#btnSave', function () {
             userId = new URLSearchParams(window.location.search).get('id');
             var formData = $('#formId').serialize();
             if (userId) {
                     formData += '&id=' + userId;
                 }
             $.ajax({
-                contentType: 'application/json',
-                type: 'PUT',
-                url: "http://localhost/uasWebpro/server/index.php/admin/api/user",
+                contentType: 'application/x-www-form-urlencoded',                type: 'PUT',
+                url: "http://127.0.0.1/uasWebpro/server/index.php/api/admin/user",
                 headers: {
                     "Authorization": "Bearer " + token
                 },
                 data:formData,
                 success: function (data) {
                     if (data.status_code === 502) {
-                        alert("Inputan tidak boleh kosong");
+                        alert('Inputan Tidak Boleh Kosong');
                     } else if (data.status_code === 200) {
-                        alert("Mobil updated successfully");
+                        alert("User updated successfully");
                         window.location.href = 'user_index.html';
-                    } else {
+                    } else if (data.status_code === 409) {
+                        alert(data.message);
+
+                    }  
+                    else {
                         console.error("Unexpected response:", data);
                         alert("Unexpected response from the server");
                     }
+                },
+                error: function (error) {
+                    console.error("Ajax request failed:", error);
+                    alert("Failed to update mobil. Please check the console for details.");
                 }
             });
             
