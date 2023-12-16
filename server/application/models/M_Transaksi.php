@@ -20,7 +20,7 @@ class M_Transaksi extends CI_Model {
 
     function check_data($id) {
         $this->db->where('id', $id);
-        $query = $this->db->get('mobil');
+        $query = $this->db->get('transaksi');
 
         if($query->row()) {
             return true;
@@ -30,14 +30,27 @@ class M_Transaksi extends CI_Model {
     }
 
     function delete($id) {
+        $this->db->select('id_mobil');
+        $this->db->where('id', $id);
+        $id_mobil = $this->db->get('transaksi')->row('id_mobil');
+
         $this->db->where('id', $id);
         $this->db->delete('transaksi');
-        if($this->db->affected_rows()>0) {
+        
+        if ($this->db->affected_rows() > 0) {
+            $updateStatusQuery = "UPDATE mobil SET status = 1 WHERE id = $id_mobil";
+            $this->db->query($updateStatusQuery);
+            
             return true;
         } else {
             return false;
         }
     }
+
+    
+    
+    
+    
 
     function customerSewaMobil($data) {
         $this->db->insert('transaksi', $data);

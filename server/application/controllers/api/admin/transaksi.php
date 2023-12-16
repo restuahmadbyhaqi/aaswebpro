@@ -146,9 +146,9 @@ class Transaksi extends REST_Controller
         }
     
         $id = $this->delete('id');
-        $check = $this->M_Transaksi->get_by_id($id);
+        $check = $this->M_Transaksi->check_data($id);
     
-        if($check == false) {
+        if ($check == false) {
             $error = array(
                 'status' => 'fail',
                 'field' => 'id',
@@ -159,29 +159,25 @@ class Transaksi extends REST_Controller
             return $this->response($error);
         }
     
-        $transaksiData = $this->M_Transaksi->get_by_id($id);
-        $idMobil = $transaksiData['id_mobil'];
-    
         $delete = $this->M_Transaksi->delete($id);
     
-        $mobilStillInUse = $this->mobilExist($idMobil);
-    
-        if (!$mobilStillInUse) {
-            $updateStatusQuery = "UPDATE mobil SET status = 1 WHERE id = $idMobil";
-            $this->db->query($updateStatusQuery);
-        
-            echo $updateStatusQuery;
+        if ($delete) {
+            $response = array(
+                'status' => 'success',
+                'data' => $delete,
+                'status_code' => 200
+            );
+        } else {
+            $response = array(
+                'status' => 'fail',
+                'message' => 'Failed to delete the record',
+                'status_code' => 502
+            );
         }
-        
-    
-        $response = array(
-            'status' => 'success',
-            'data' => $delete,
-            'status_code' => 200
-        );
     
         return $this->response($response);
     }
+    
     
 
 }
