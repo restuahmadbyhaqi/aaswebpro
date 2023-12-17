@@ -238,55 +238,55 @@
 
 <script src="../../js/demo/chart-area-demo.js"></script>
 <script src="../../js/demo/chart-pie-demo.js"></script>
-<script  src="./handleLogout.js"></script>
+<script type="text/javascript" src="../handleLogout.js"></script>
 
 <!-- ... Your existing HTML code ... -->
 
 <script>
-    var base_url = "http://localhost/uasWebpro/server/api/customer/";
+  var base_url = "http://localhost/uasWebpro/server/api/customer/";
 
-    $(document).ready(function () {
-        let token = localStorage.getItem('token');
+  $(document).ready(function () {
+      let token = localStorage.getItem('token');
 
-        if (!token) {
-            alert("Harus login dahulu");
-            window.location.href = './../auth/login.html';
-        }
+      if (!token) {
+          alert("Harus login dahulu");
+          window.location.href = './../auth/login.html';
+      }
 
-        var idMobil = $(this).data('id_mobil');
-        console.log(idMobil);
+      // Assuming you want to get data-id_mobil from the first row of the table
+      var idMobil = $("mobil").data('id_mobil');
+      console.log(idMobil);
 
-        $.ajax({
-            type: "GET",
-            url: base_url + "sewa?id=" + idMobil,
-            headers: {
-                "Authorization": "Bearer " + token
-            },
-            data: {
-                id: idMobil
-            },
-            dataType: "json",
-            cache: false,
-            success: function (responseData) {
-                let dataBody = ``;
-                for (let i = 0; i < responseData.length; i++) {
-                    dataBody += `
-                        <tr>
-                            <td>${i + 1}</td>
-                            <td>${responseData[i].nama}</td>
-                            <td>${responseData[i].nama_mobil}</td>
-                            <td>${responseData[i].tgl_pinjam}</td>
-                            <td>${responseData[i].tgl_kembali}</td>
-                            <td>${responseData[i].harga_sewa}</td>
-                        </tr>`;
-                }
-                $("#myBody").empty();
-                $("#myBody").append(dataBody);
-            }
-        });
-    });
+      $.ajax({
+          type: "GET",
+          url: base_url + "sewa",
+          headers: {
+              "Authorization": "Bearer " + token
+          },
+          data: {
+              id: idMobil
+          },
+          dataType: "json",
+          cache: false,
+          success: function (responseData) {
+              let dataBody = ``;
+              for (let i = 0; i < responseData.length; i++) {
+                  dataBody += `
+                      <tr>
+                          <td>${i + 1}</td>
+                          <td>${responseData[i].nama}</td>
+                          <td>${responseData[i].nama_mobil}</td>
+                          <td>${responseData[i].tgl_pinjam}</td>
+                          <td>${responseData[i].tgl_kembali}</td>
+                          <td>${responseData[i].harga_sewa}</td>
+                      </tr>`;
+              }
+              $("#myBody").empty();
+              $("#myBody").append(dataBody);
+          }
+      });
+  });
 </script>
-
 
 
 </body>
