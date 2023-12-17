@@ -71,7 +71,7 @@ class Transaksi extends REST_Controller
     }
 
     private function mobilExist($idMobil) {
-        $queryTransaksi = "SELECT * FROM detail_pesanan WHERE id_Mobil = $idMobil";
+        $queryTransaksi = "SELECT * FROM transaksi WHERE id_Mobil = $idMobil";
         $queryMobil = "SELECT * FROM mobil WHERE id = $idMobil";
     
         $resultTransaksi = $this->db->query($queryTransaksi);

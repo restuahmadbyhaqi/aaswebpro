@@ -59,6 +59,20 @@ class Sewa extends REST_Controller
 
         return true;
     }
+
+
+    public function index_get() {
+        if (!$this->is_login()) {
+            return;
+        }
+    
+        $id = $this->get('id');
+    
+        $data = $this->M_Transaksi->getTransaksiByIdMobil($id);
+    
+        $this->response($data, 200);
+    }
+    
     
     public function index_post() {
         if (!$this->is_login()) {
@@ -86,6 +100,9 @@ class Sewa extends REST_Controller
             return $this->response($response);
         }
 
+        $updateStatusQuery = "UPDATE mobil SET status = 2 WHERE id = $idMobil";
+        $this->db->query($updateStatusQuery);
+
         $data = [
             'nama' => $this->post('nama'),
             'alamat' => $this->post('alamat'),
@@ -111,49 +128,6 @@ class Sewa extends REST_Controller
 
             return $this->response($error);
         }
-    }
-    
-    function index_delete() {
-        if (!$this->is_login()) {
-            return;
-        }
-    
-        $id = $this->delete('id');
-        $check = $this->M_Transaksi->get_by_id($id);
-    
-        if($check == false) {
-            $error = array(
-                'status' => 'fail',
-                'field' => 'id',
-                'message' => 'id is not found',
-                'status_code' => 502
-            );
-    
-            return $this->response($error);
-        }
-    
-        $transaksiData = $this->M_Transaksi->get_by_id($id);
-        $idMobil = $transaksiData['id_mobil'];
-    
-        $delete = $this->M_Transaksi->delete($id);
-    
-        $mobilStillInUse = $this->M_Mobil->mobilExist($idMobil);
-    
-        if (!$mobilStillInUse) {
-            $updateStatusQuery = "UPDATE mobil SET status = 1 WHERE id = $idMobil";
-            $this->db->query($updateStatusQuery);
-        
-            echo $updateStatusQuery;
-        }
-        
-    
-        $response = array(
-            'status' => 'success',
-            'data' => $delete,
-            'status_code' => 200
-        );
-    
-        return $this->response($response);
     }
     
 

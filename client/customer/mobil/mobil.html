@@ -57,8 +57,8 @@
                   <a class="nav-link" href="mobil.html"> Mobil </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../transaksi/transaksi.html">Transaksi Anda</a>
-                  </li>
+                  <a class="nav-link" href="../transaksi/transaksi.html">Transaksi Anda </a>
+                </li>
                 <li class="nav-item">
                   <a class="nav-link" href="#contactLink">Contact Us</a>
                 </li>
@@ -178,9 +178,8 @@
                     <div class="form-group">
                         <label for="tgl_kembali">Tanggal Pengembalian</label>
                         <input type="date" name="tgl_kembali" id="tgl_kembali" class="form-control" placeholder="Masukkan tanggal pengembalian" required>
+                        <input type="hidden" id="selectedMobilId" name="selectedMobilId">
                     </div>
-                    <!-- Add more form fields as needed -->
-
                     <button type="submit" class="btn btn-primary" id="btnSewa">Submit</button>
                 </form>
             </div>
@@ -283,127 +282,98 @@
 <script src="../../js/demo/chart-pie-demo.js"></script>
 <script  src="./handleLogout.js"></script>
 
+<!-- ... Your existing HTML code ... -->
+
 <script>
-  var base_url = "http://localhost/uasWebpro/server/api/customer/";
+    var base_url = "http://localhost/uasWebpro/server/api/customer/";
 
-      $(document).ready(function () {
-          let token = localStorage.getItem('token');
+    $(document).ready(function () {
+        let token = localStorage.getItem('token');
 
-          if (!token) {
-              alert("Harus login dahulu");
-              window.location.href = './../auth/login.html';
-          }
+        if (!token) {
+            alert("Harus login dahulu");
+            window.location.href = './../auth/login.html';
+        }
 
-          $.ajax({
-              type: "GET",
-              url: base_url + "mobil",
-              headers: {
-                  "Authorization": "Bearer " + token
-              },
-              data: {
-                  id: ''
-              },
-              dataType: "json",
-              cache: false,
-              success: function (responseData) {
-                console.log(responseData);
-                  let dataBody = ``;
-                  for (let i = 0; i < responseData.length; i++) {
-
-                      dataBody += `
-                          <tr>
-                              <td>${i + 1}</td>
-                              <td>${responseData[i].nama_mobil}</td>
-                              <td>${responseData[i].warna}</td>
-                              <td>${responseData[i].no_polisi}</td>
-                              <td>${responseData[i].jumlah_kursi}</td>
-                              <td>${responseData[i].harga_sewa}</td>
-                              <td>
-                                  <a href="#" data-id="${responseData[i].id}" class="btn btn-sm btn-warning btnModal">Sewa</a>&nbsp
-                              </td>
-                          </tr>`;
-                  }
-                  $("#myBody").empty();
-                  $("#myBody").append(dataBody);
-              }
-          });
-      });
-
-      // Nampilin Modal ygy:v
-      $(document).ready(function () {
-          let token = localStorage.getItem('token');
-
-          if (!token) {
-              alert("Harus login dahulu");
-              window.location.href = './../auth/login.html';
-          }
-
-          $(document).on('click', '.btnModal', function () {
-              $('#sewaModal').modal('show');
-          });
-      });
-
-      // User nyewa mobil e belum tak bikin hehe
-$(document).ready(function () {
-    let token = localStorage.getItem('token');
-
-    if (!token) {
-        alert("Harus login dahulu");
-        window.location.href = './../auth/login.html';
-    }
-
-    $(document).on('click', '.btnSewa', function () {
-        let mobilId = $(this).data('id');
-        getIdMobil(mobilId);
-    });
-
-    // Nge Get id mobil
-    function getIdMobil(id) {
+        // Retrieve mobil data and populate the table
         $.ajax({
             type: "GET",
-            url: base_url + "mobil/" + id,
-            headers: {
-                "Authorization": "Bearer " + token
-            },
-            dataType: "json",
-            success: function (response) {
-                console.log(response);
-                postData(response, id);
-            }
-        });
-    }
-
-    // Ngepost valuenya
-    function postData(response, mobilId) {
-        $.ajax({
-            type: "POST",
-            url: base_url + "transaksi", // Adjust the URL to match your controller endpoint
+            url: base_url + "mobil",
             headers: {
                 "Authorization": "Bearer " + token
             },
             data: {
-                nama: $("#nama").val(),
-                alamat: $("#alamat").val(),
-                no_hp: $("#no_hp").val(),
-                tgl_pinjam: $("#tgl_pinjam").val(),
-                tgl_kembali: $("#tgl_kembali").val(),
-                id_mobil: mobilId
+                id: ''
             },
             dataType: "json",
-            success: function (response) {
-                console.log(response);
-                alert('Mobil berhasil disewa');
-                location.reload();
-            },
-            error: function (error) {
-                console.log(error.responseText);
-                alert('Gagal menyewa mobil. Periksa kembali input Anda.');
+            cache: false,
+            success: function (responseData) {
+                let dataBody = ``;
+                for (let i = 0; i < responseData.length; i++) {
+                    dataBody += `
+                        <tr>
+                            <td>${i + 1}</td>
+                            <td>${responseData[i].nama_mobil}</td>
+                            <td>${responseData[i].warna}</td>
+                            <td>${responseData[i].no_polisi}</td>
+                            <td>${responseData[i].jumlah_kursi}</td>
+                            <td>${responseData[i].harga_sewa}</td>
+                            <td>
+                                <a href="#" data-id="${responseData[i].id}" class="btn btn-sm btn-warning btnModal">Sewa</a>&nbsp
+                            </td>
+                        </tr>`;
+                }
+                $("#myBody").empty();
+                $("#myBody").append(dataBody);
             }
         });
-    }
-});
 
+        // Nampilin Modal ygy:v
+        $(document).on('click', '.btnModal', function () {
+            let mobilId = $(this).data('id');
+            $('#selectedMobilId').val(mobilId);
+            console.log(mobilId);
+            $('#sewaModal').modal('show');
+        });
+
+        // User nyewa mobil e belum tak bikin hehe
+        $(document).on('click', '#btnSewa', function () {
+            let mobilId = $('#selectedMobilId').val();
+
+            if (mobilId) {
+                postData(mobilId);
+                alert('Mobil berhasil disewa');
+            } else {
+                alert('Pilih mobil terlebih dahulu');
+            }
+        });
+
+        // Ngepost valuenya
+        function postData(mobilId) {
+            $.ajax({
+                type: "POST",
+                url: base_url + "sewa",
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                data: {
+                    nama: $("#nama").val(),
+                    alamat: $("#alamat").val(),
+                    no_hp: $("#no_hp").val(),
+                    tgl_pinjam: $("#tgl_pinjam").val(),
+                    tgl_kembali: $("#tgl_kembali").val(),
+                    id_mobil: mobilId
+                },
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    location.reload();
+                }
+            });
+        }
+    });
 </script>
+
 
 </body>
 </html>

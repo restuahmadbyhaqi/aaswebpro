@@ -12,10 +12,15 @@ class M_Transaksi extends CI_Model {
 
     }   
 
-    function get_by_id($id) {
-        $this->db->where('id', $id);
-        $query = $this->db->get('transaksi');
-        return $query->row();
+    function getTransaksiByIdMobil($id) {
+        $this->db->select('transaksi.id, transaksi.nama, mobil.nama_mobil, mobil.harga_sewa, transaksi.tgl_pinjam, transaksi.tgl_kembali ');
+        $this->db->from('transaksi');
+        $this->db->join('mobil', 'transaksi.id_mobil = mobil.id');
+        $this->db->where('transaksi.id_mobil', $id);
+    
+        $query = $this->db->get();
+    
+        return $query->result();
     }
 
     function check_data($id) {
@@ -46,10 +51,6 @@ class M_Transaksi extends CI_Model {
             return false;
         }
     }
-
-    
-    
-    
     
 
     function customerSewaMobil($data) {

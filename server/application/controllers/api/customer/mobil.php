@@ -59,13 +59,6 @@ class Mobil extends REST_Controller
         }
         $this->response($data, 200);
     }
-    
-    public function index_post() {
-        $id = $this->input->post('id'); 
-        $updateStatusQuery = "UPDATE mobil SET status = 2 WHERE id = $id";
-        $this->db->query($updateStatusQuery);
-        $this->response('success');
-    }
 
     function index_delete() {
         if (!$this->is_login()) {
