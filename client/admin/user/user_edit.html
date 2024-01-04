@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+   <title>SENSUS</title>
+
+   <!-- Custom fonts -->
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+   <!-- Custom styles -->
+   <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
+</head>
+
+<body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">SENSUS</div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item active">
+                <a class="nav-link" href="./../dashboard.html">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="user_index.html">
+                    <i class="fas fa-fw fa-user"></i>
+                    <span>Data User</span>
+                </a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <div class="topbar-divider d-none d-sm-block"></div>
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <!-- ... (unchanged) -->
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <!-- Content Row -->
+                    <form action="" id="formId">
+                        <div class="row">
+                            <!-- Earnings (Monthly) Card Example -->
+                            <div class="col-md-12" style="text-align: justify;">
+                                <div class="form-group">
+                                    <input type="hidden" name="id" id="id" value="">
+                                    <label for="name">Username</label>
+                                    <input type="text" name="username" id="username" class="form-control" placeholder="Masukkan username customer" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="number">Email </label>
+                                    <input type="text" name="email" id="email" class="form-control" placeholder="Masukkan email customer" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="number">Password</label>
+                                    <input type="password" name="password" id="password" class="form-control" placeholder="Masukkan Password customer" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="font-weight-bold" for="tahun">Role</label>
+                                    <select name="role_id" id="role_id" class="form-control" required="required">
+                                        <option value="">- Pilih Role</option>
+                                        <option value="1">Admin</option>
+                                        <option value="2">Customer</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <a href="user_index.html" class="btn btn-sm btn-warning">Kembali</a>
+                                    <button type="button" class="btn btn-sm btn-success" id="btnSave"><i class="fa fa-save"></i>Simpan</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; WebPro 2023</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    <!-- jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript -->
+    <script src="../../vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script type="text/javascript" src="../handleLogout.js"></script>
+
+    <!-- Your custom script -->
+    <script>
+        // Get data 
+        $(document).ready(function () {
+            let token = localStorage.getItem('token');
+            
+            if (!token) {
+                alert("Harus login dahulu");
+                return window.location.href = './../auth/login.html';
+            }
+
+            var userId = new URLSearchParams(window.location.search).get('id');
+            document.getElementById('id').value = userId;
+
+            console.log(userId);
+            
+            if (!userId) {
+                console.log("User ID not found");
+                return window.location.href = 'user_index.html';
+            }
+
+            $.ajax({
+                method: 'GET',
+                url: 'http://127.0.0.1/uasWebpro/server/index.php/api/admin/user?id=' + userId,
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    $("#username").val(data.username);
+                    $("#email").val(data.email);
+                    // $("#password").val(data.password);
+                    $("#role_id").val(data.role_id);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.error('AJAX request failed: ', textStatus, errorThrown);
+                }
+            });
+        });
+
+        // update data
+        $(document).ready(function () {    
+            let token = localStorage.getItem('token');
+            
+            if (!token) {
+                alert("Harus login dahulu");
+                return window.location.href = './../auth/login.html';
+            }
+        $(document).on('click', '#btnSave', function () {
+            userId = new URLSearchParams(window.location.search).get('id');
+            var formData = $('#formId').serialize();
+            if (userId) {
+                    formData += '&id=' + userId;
+                }
+            $.ajax({
+                contentType: 'application/x-www-form-urlencoded',                type: 'PUT',
+                url: "http://127.0.0.1/uasWebpro/server/index.php/api/admin/user",
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                data:formData,
+                success: function (data) {
+                    if (data.status_code === 502) {
+                        alert('Inputan Tidak Boleh Kosong');
+                    } else if (data.status_code === 200) {
+                        alert("User updated successfully");
+                        window.location.href = 'user_index.html';
+                    } else if (data.status_code === 409) {
+                        alert(data.message);
+
+                    }  
+                    else {
+                        console.error("Unexpected response:", data);
+                        alert("Unexpected response from the server");
+                    }
+                },
+                error: function (error) {
+                    console.error("Ajax request failed:", error);
+                    alert("Failed to update mobil. Please check the console for details.");
+                }
+            });
+            
+        });
+    });
+            
+    </script>
+</body>
+
+</html>
